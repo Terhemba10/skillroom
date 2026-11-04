@@ -98,6 +98,14 @@ Same workflow, completely different tests: SkillRoom adapts to any job.
 
 Switch · Switch Console · Claude Code · Mattermost · Docker
 
+## License
+
+MIT, see [LICENSE](LICENSE).
+
+## Live site
+
+https://terhemba10.github.io/skillroom/
+
 ## Author
 
 Terhemba Alumo
