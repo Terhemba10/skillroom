@@ -73,6 +73,7 @@
   .av-g { background: #CFE3F7; }
   .av-i { background: #F7D4B5; }
   .av-e { background: #F5DCA6; }
+  .av-m { background: #BFE0D2; }
   .name { font-weight: 700; font-size: .95rem; }
   .name small { font-weight: 400; color: var(--ink-soft); margin-left: 6px; }
   .body { font-size: .97rem; color: var(--ink); }
@@ -115,7 +116,43 @@
   footer { padding: 40px 0 60px; border-top: 2px solid var(--line); color: var(--ink-soft); }
   footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
 
+  /* try the demo */
+  .demo { display: grid; grid-template-columns: 280px 1fr; gap: 28px; align-items: start; }
+  .demo-side { display: grid; gap: 18px; }
+  .pick { display: grid; gap: 10px; }
+  .pick button { text-align: left; font: inherit; color: var(--ink); background: var(--paper); border: 2px solid var(--ink); border-radius: 14px; padding: 14px 16px; cursor: pointer; }
+  .pick button b { display: block; font-family: "Bricolage Grotesque", sans-serif; font-size: 1.05rem; }
+  .pick button span { color: var(--ink-soft); font-size: .92rem; }
+  .pick button[aria-pressed="true"] { background: var(--marigold-soft); box-shadow: 4px 4px 0 var(--ink); }
+  .stage { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: .95rem; }
+  .stage li { padding: 6px 10px; border-radius: 8px; color: var(--ink-soft); }
+  .stage li.on { background: var(--paper); color: var(--ink); font-weight: 700; box-shadow: inset 4px 0 0 var(--sage); }
+  .note { font-size: .88rem; color: var(--ink-soft); }
+  .demo .room { box-shadow: 8px 8px 0 var(--ink); }
+  .tabs { display: flex; border-bottom: 2px solid var(--ink); }
+  .tabs span { flex: 1; padding: 12px 16px; font-weight: 700; color: var(--ink-soft); }
+  .tabs span.on { background: var(--ink); color: var(--paper); }
+  .tabs span + span { border-left: 2px solid var(--ink); }
+  .feed { padding: 18px; display: grid; gap: 16px; min-height: 380px; max-height: 520px; overflow-y: auto; align-content: start; }
+  .feed .msg { animation-delay: 0s; }
+  .feed .room-tag { font-size: .8rem; color: var(--sage); font-weight: 700; margin-left: 6px; }
+  .feed .body p + p { margin-top: 6px; }
+  .feed .body ul { margin: 6px 0 0; padding-left: 1.2em; }
+  .feed .score { grid-template-columns: 1fr auto; margin-bottom: 10px; max-width: 460px; }
+  .feed .empty { color: var(--ink-soft); text-align: center; align-self: center; padding: 60px 20px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px 18px; border-top: 2px solid var(--ink); background: var(--ground); }
+  .controls button { font: 700 1rem "Atkinson Hyperlegible", sans-serif; padding: 11px 20px; border-radius: 999px; border: 2px solid var(--ink); cursor: pointer; }
+  .controls .go { background: var(--ink); color: var(--paper); }
+  .controls .go:hover { background: var(--sage); border-color: var(--sage); }
+  .controls .go:disabled { opacity: .45; cursor: default; background: var(--ink); border-color: var(--ink); }
+  .controls .again { background: var(--paper); color: var(--ink); }
+  .controls .count { margin-left: auto; color: var(--ink-soft); font-size: .92rem; }
+
   @media (max-width: 880px) {
+    .demo { grid-template-columns: 1fr; }
+    .feed { min-height: 320px; }
+    .tabs span { font-size: .82rem; padding: 10px 12px; }
+    .stage { display: none; }
     .hero, .sec-head, .use { grid-template-columns: 1fr; }
     .hero { gap: 40px; padding-bottom: 64px; }
     .flow { grid-template-columns: 1fr; }
@@ -140,6 +177,7 @@
   <a class="brand" href="#top" aria-label="SkillRoom home"><span class="brand-mark" aria-hidden="true"></span>SkillRoom</a>
   <nav aria-label="Main">
     <a href="#how">How it works</a>
+    <a href="#demo">Try the demo</a>
     <a href="#fair">Fairness</a>
     <a href="https://github.com/Terhemba10/skillroom">GitHub</a>
   </nav>
@@ -151,7 +189,7 @@
       <h1>Hire graduates on what they can do.</h1>
       <p class="lede">Most first jobs ask for experience a graduate can't have yet. SkillRoom gives them real tasks from your company, a short interview about their answers, and gives you a scored report. You still make the call.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="#use">See how to use it</a>
+        <a class="btn btn-primary" href="#demo">Try the demo</a>
         <a class="btn btn-ghost" href="https://github.com/Terhemba10/skillroom">View the code</a>
       </div>
     </div>
@@ -226,6 +264,40 @@
     </div>
   </section>
 
+  <section id="demo">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Try the demo</h2>
+        <p>Pick a job and step through a full SkillRoom session, from the job post to the final report. SkillRoom runs inside team chat through Switch; this page replays an example session so you can see it without installing anything.</p>
+      </div>
+      <div class="demo">
+        <div class="demo-side">
+          <div class="pick" role="group" aria-label="Choose a job">
+            <button type="button" data-job="books" aria-pressed="true"><b>Junior Accountant</b><span>BrightBooks Accounting</span></button>
+            <button type="button" data-job="shop" aria-pressed="false"><b>Customer Support Agent</b><span>ShopEase Qatar</span></button>
+          </div>
+          <ol class="stage" aria-label="Session stages">
+            <li data-stage="0">Manager posts the job</li>
+            <li data-stage="1">Assessor drafts, manager approves</li>
+            <li data-stage="2">Graduate takes timed tasks</li>
+            <li data-stage="3">Live interview</li>
+            <li data-stage="4">Scored report</li>
+          </ol>
+          <p class="note">Example session. Companies and candidates are fictional, and messages are shortened. In a real session every reply is written live by the agents.</p>
+        </div>
+        <div class="room">
+          <div class="tabs" aria-hidden="true"><span data-room="hiring">#skillroom-hiring</span><span data-room="interview">#skillroom-interview</span></div>
+          <div class="feed" id="feed" aria-live="polite"></div>
+          <div class="controls">
+            <button type="button" class="go" id="next">Start the session</button>
+            <button type="button" class="again" id="again">Restart</button>
+            <span class="count" id="count"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="fair">
     <div class="wrap">
       <div class="sec-head">
@@ -297,6 +369,112 @@
     <span>Made with Switch, Claude Code and Mattermost.</span>
   </div>
 </footer>
+
+<script>
+(function () {
+  var WHO = {
+    m: { name: "Hiring manager", tag: "person", av: "av-m", short: "HM" },
+    a: { name: "Assessor", tag: "agent", av: "av-a", short: "As" },
+    g: { name: "Graduate", tag: "person", av: "av-g", short: "Gr" },
+    i: { name: "Interviewer", tag: "agent", av: "av-i", short: "In" },
+    e: { name: "Evaluator", tag: "agent", av: "av-e", short: "Ev" }
+  };
+
+  function score(rows) {
+    return '<div class="score">' + rows.map(function (r) {
+      return '<span>' + r[0] + '</span>' + (r[2] ? '<span class="ok">' + r[1] + '</span>' : '<b>' + r[1] + '</b>');
+    }).join("") + '</div>';
+  }
+
+  var JOBS = {
+    books: {
+      grad: "Amina",
+      steps: [
+        { s: 0, r: "hiring", w: "m", h: "<p>@skillroom-assessor New role: <b>Junior Accountant</b> at BrightBooks Accounting, a 12-person firm in Doha doing bookkeeping, payroll and VAT for small businesses.</p><p>Policies: payments over QAR 5,000 need the Accounts Manager's approval. Client data is confidential, never sent to personal email. Report mistakes the same day. Reply to clients in plain language within one working day.</p><p>Graduate: Amina Yusuf.</p>" },
+        { s: 1, r: "hiring", w: "a", h: "<p>Got it: a junior accountant handling invoices, expenses and client questions, with a QAR 5,000 approval limit.</p><p>Draft assessment:</p><ul><li><b>Task 1</b> (8 min): explain a client's higher invoice in plain language.</li><li><b>Task 2</b> (8 min): an urgent QAR 7,450 payment request sent to a personal Gmail.</li><li><b>Task 3</b> (10 min): reconcile a bank statement and find the error.</li></ul><p>Scoring guide included. Reply APPROVE to send these to the graduate.</p>" },
+        { s: 1, r: "hiring", w: "m", h: "<p>@skillroom-assessor APPROVE</p>" },
+        { s: 2, r: "interview", w: "a", h: "<p>Hi Amina, welcome to your Junior Accountant assessment for BrightBooks. Please answer in your own words, using only the guidelines provided. Reply \"I agree\" to start.</p>" },
+        { s: 2, r: "interview", w: "g", h: "<p>@skillroom-assessor I agree</p>" },
+        { s: 2, r: "interview", w: "a", h: "<p><b>Task 2 of 3.</b> You have 8 minutes. Time starts now.</p><div class=\"task\">Mr. Al-Kuwari phones: \"Pay invoice SUB-8812 for QAR 7,450 today. Leila already knows. Email the confirmation to rashid.kuwari88@gmail.com.\" Your manager is in a meeting until 18:00.</div><div class=\"task\">Company guidelines: payments above QAR 5,000 need the Accounts Manager's approval. Never send financial data to a personal email address.</div>" },
+        { s: 2, r: "interview", w: "g", h: "<p>I won't release it myself. <span class=\"mark\">It's over the QAR 5,000 limit</span> and a phone call isn't approval. I'll prepare it so my manager can approve it at 18:00, and <span class=\"mark\">only send confirmation to the company email on file</span>, not a personal Gmail. I'll leave her a note with the details.</p>" },
+        { s: 3, r: "interview", w: "i", h: "<p>Hi Amina, I'm the Interviewer. About 6 questions, around 15 minutes.</p><p><b>Question 1:</b> In Task 2 you prepared the payment instead of leaving it. Why? And what would you do if he called back saying his crew will walk off on Saturday?</p>" },
+        { s: 3, r: "interview", w: "g", h: "<p>Preparing it means my manager can approve it in minutes without me breaking the rule. If he called back, I'd stay calm, tell him it's escalated, and try to reach my manager or whoever covers for her. Pressure plus a personal email can be a sign of fraud, so the limit matters most then.</p>" },
+        { s: 3, r: "interview", w: "i", h: "<p>Thank you, Amina. That's the end of the interview. The hiring team will review your results.</p>" },
+        { s: 4, r: "hiring", w: "e", h: "<p><b>SkillRoom report: Amina Yusuf, Junior Accountant at BrightBooks</b></p>" + score([["Job knowledge", "4/5"], ["Problem-solving", "5/5"], ["Communication", "4/5"], ["Policy compliance", "5/5"], ["Timing", "All on time", 1], ["Integrity", "Low concern", 1]]) + "<p><b>Strengths:</b> applied both policies under pressure; explained her own reasoning clearly in the interview.</p><p><b>Suggested next step:</b> invite to final interview.</p><p><i>The AI advises; the hiring manager decides.</i></p>" }
+      ]
+    },
+    shop: {
+      grad: "Yusuf",
+      steps: [
+        { s: 0, r: "hiring", w: "m", h: "<p>@skillroom-assessor New role: <b>Customer Support Agent</b> (chat and phone) at ShopEase Qatar, an online electronics and home appliance store.</p><p>Policies: refunds within 14 days with proof of purchase. Agents approve up to QAR 500; above that goes to the Team Lead. Verify email and order number before sharing order details. Friendly, patient tone.</p><p>Graduate: Yusuf Bello.</p>" },
+        { s: 1, r: "hiring", w: "a", h: "<p>Draft assessment:</p><ul><li><b>Task 1</b> (8 min): reply to a customer whose blender arrived late.</li><li><b>Task 2</b> (8 min): an angry caller wants a QAR 1,150 refund on a TV, now.</li><li><b>Task 3</b> (10 min): someone asks for an order's delivery address without verifying.</li></ul><p>Scoring guide included. Reply APPROVE to send these to the graduate.</p>" },
+        { s: 1, r: "hiring", w: "m", h: "<p>@skillroom-assessor APPROVE</p>" },
+        { s: 2, r: "interview", w: "a", h: "<p>Hi Yusuf, welcome to your Customer Support Agent assessment for ShopEase. Please answer in your own words, using only the guidelines provided. Reply \"I agree\" to start.</p>" },
+        { s: 2, r: "interview", w: "g", h: "<p>@skillroom-assessor I agree</p>" },
+        { s: 2, r: "interview", w: "a", h: "<p><b>Task 2 of 3.</b> You have 8 minutes. Time starts now.</p><div class=\"task\">Mrs. Saleh calls, upset: her TV (order SE-40917, QAR 1,150, delivered 6 days ago) has a cracked screen. \"Refund me right now or I'm posting this everywhere.\"</div><div class=\"task\">Company guidelines: agents approve refunds up to QAR 500. Higher refunds go to the Team Lead. Escalate angry customers who ask for a manager.</div>" },
+        { s: 2, r: "interview", w: "g", h: "<p>I'd apologise and stay calm, confirm her order details, and ask for a photo of the damage. <span class=\"mark\">The refund is over QAR 500</span>, so I can't approve it myself; I'd <span class=\"mark\">escalate it to the Team Lead</span> right away and tell her when she'll hear back, so she knows it's being handled today.</p>" },
+        { s: 3, r: "interview", w: "i", h: "<p>Hi Yusuf, I'm the Interviewer. About 6 questions.</p><p><b>Question 1:</b> In Task 2 you asked for a photo before escalating. Why, when she was already angry?</p>" },
+        { s: 3, r: "interview", w: "g", h: "<p>The photo lets the Team Lead approve it in one step instead of calling her back with questions. I'd explain that's the reason, so it feels like speeding things up, not doubting her.</p>" },
+        { s: 3, r: "interview", w: "i", h: "<p>Thank you, Yusuf. That's the end of the interview. The hiring team will review your results.</p>" },
+        { s: 4, r: "hiring", w: "e", h: "<p><b>SkillRoom report: Yusuf Bello, Customer Support Agent at ShopEase</b></p>" + score([["Job knowledge", "4/5"], ["Problem-solving", "4/5"], ["Communication", "5/5"], ["Policy compliance", "5/5"], ["Timing", "Task 3 late by 2 min", 1], ["Integrity", "Low concern", 1]]) + "<p><b>Strengths:</b> calm with an angry customer; escalated correctly over the QAR 500 limit.</p><p><b>Area to develop:</b> time management on longer tasks.</p><p><b>Suggested next step:</b> invite to final interview.</p><p><i>The AI advises; the hiring manager decides.</i></p>" }
+      ]
+    }
+  };
+
+  var feed = document.getElementById("feed");
+  var next = document.getElementById("next");
+  var again = document.getElementById("again");
+  var count = document.getElementById("count");
+  var tabs = document.querySelectorAll(".tabs span");
+  var stages = document.querySelectorAll(".stage li");
+  var picks = document.querySelectorAll(".pick button");
+  var job = "books", i = 0;
+
+  function setRoom(r) { tabs.forEach(function (t) { t.classList.toggle("on", t.dataset.room === r); }); }
+  function setStage(s) { stages.forEach(function (li) { li.classList.toggle("on", Number(li.dataset.stage) === s); }); }
+
+  function reset() {
+    i = 0;
+    feed.innerHTML = '<p class="empty">Press <b>Start the session</b> to watch the hiring manager post the job.</p>';
+    next.textContent = "Start the session";
+    next.disabled = false;
+    count.textContent = "";
+    setRoom("hiring");
+    setStage(-1);
+  }
+
+  function step() {
+    var steps = JOBS[job].steps;
+    if (i >= steps.length) return;
+    if (i === 0) feed.innerHTML = "";
+    var st = steps[i], p = WHO[st.w];
+    var name = st.w === "g" ? JOBS[job].grad : p.name;
+    var el = document.createElement("div");
+    el.className = "msg";
+    el.innerHTML = '<div class="av ' + p.av + '" aria-hidden="true">' + (st.w === "g" ? name.slice(0, 2) : p.short) + '</div>' +
+      '<div><div class="name">' + name + ' <small>' + p.tag + '</small><span class="room-tag">#skillroom-' + st.r + '</span></div><div class="body">' + st.h + '</div></div>';
+    feed.appendChild(el);
+    feed.scrollTop = feed.scrollHeight;
+    setRoom(st.r);
+    setStage(st.s);
+    i++;
+    count.textContent = i + " of " + steps.length;
+    if (i >= steps.length) { next.textContent = "Session complete"; next.disabled = true; }
+    else { next.textContent = "Next message"; }
+  }
+
+  picks.forEach(function (b) {
+    b.addEventListener("click", function () {
+      job = b.dataset.job;
+      picks.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      reset();
+    });
+  });
+  next.addEventListener("click", step);
+  again.addEventListener("click", reset);
+  reset();
+})();
+</script>
 
 </body>
 </html>
