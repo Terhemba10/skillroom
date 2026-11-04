@@ -102,6 +102,10 @@ Switch · Switch Console · Claude Code · Mattermost · Docker
 
 MIT, see [LICENSE](LICENSE).
 
+## Try it live
+
+**SkillRoom Live** (https://claude.ai/artifact/F5bEgcCasC4rRUvf64RmFv) is a browser version of the same workflow: describe any job, take three AI-written timed tasks as the graduate, answer a four-question interview about your own answers, and get a scored report with timing and integrity signals (pasted text, leaving the tab). It runs on claude.ai using the visitor's own Claude account. The full multi-agent version runs in team chat through Switch, as described above.
+
 ## Live site
 
 https://terhemba10.github.io/skillroom/
