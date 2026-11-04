@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkillRoom</title>
+<meta name="description" content="SkillRoom lets employers hire graduates on what they can do, not on years of experience. Built on Switch for the Flip the Switch Hackathon.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ground: #E9EFEA;
+    --paper: #FFFFFF;
+    --ink: #17302C;
+    --ink-soft: #4C625D;
+    --sage: #3F7A68;
+    --marigold: #F2B33D;
+    --marigold-soft: #FBE3AE;
+    --line: #C9D6CF;
+    --radius-lg: 18px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font: 400 1.0625rem/1.6 "Atkinson Hyperlegible", system-ui, sans-serif;
+  }
+  a { color: var(--sage); text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--marigold); outline-offset: 3px; border-radius: 4px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  h1, h2, h3 { font-family: "Bricolage Grotesque", sans-serif; line-height: 1.05; margin: 0; }
+  h1 { font-weight: 800; font-size: clamp(2.6rem, 6vw, 4.6rem); letter-spacing: -0.03em; }
+  h2 { font-weight: 700; font-size: clamp(1.8rem, 3.4vw, 2.6rem); letter-spacing: -0.02em; }
+  h3 { font-weight: 700; font-size: 1.3rem; letter-spacing: -0.01em; }
+  p { margin: 0; max-width: 62ch; }
+
+  /* top bar */
+  .bar { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; }
+  .brand { font: 800 1.35rem "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+  .brand-mark { width: 28px; height: 28px; border-radius: 8px; background: var(--ink); position: relative; }
+  .brand-mark::after { content: ""; position: absolute; inset: 7px 7px 7px 7px; border-radius: 3px; background: var(--marigold); }
+  .bar nav a { color: var(--ink); text-decoration: none; margin-left: 22px; font-weight: 700; }
+  .bar nav a:hover { text-decoration: underline; }
+
+  /* hero */
+  .hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; padding: 40px 0 88px; }
+  .hero h1 { margin-bottom: 22px; }
+  .hero .lede { font-size: 1.2rem; color: var(--ink-soft); margin-bottom: 30px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-block; padding: 14px 22px; border-radius: 999px; font-weight: 700; text-decoration: none; border: 2px solid var(--ink); }
+  .btn-primary { background: var(--ink); color: var(--paper); }
+  .btn-primary:hover { background: var(--sage); border-color: var(--sage); }
+  .btn-ghost { color: var(--ink); }
+  .btn-ghost:hover { background: var(--paper); }
+
+  /* the chat: the one bold thing */
+  .room { background: var(--paper); border-radius: var(--radius-lg); border: 2px solid var(--ink); box-shadow: 10px 10px 0 var(--ink); overflow: hidden; }
+  .room-head { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 2px solid var(--ink); font-weight: 700; }
+  .room-head .hash { color: var(--sage); }
+  .room-head .who { margin-left: auto; font-weight: 400; color: var(--ink-soft); font-size: .9rem; }
+  .msgs { padding: 18px; display: grid; gap: 16px; }
+  .msg { display: grid; grid-template-columns: 36px 1fr; gap: 12px; opacity: 0; transform: translateY(6px); animation: arrive .45s ease-out forwards; }
+  .msg:nth-child(2) { animation-delay: .7s; }
+  .msg:nth-child(3) { animation-delay: 1.5s; }
+  .msg:nth-child(4) { animation-delay: 2.3s; }
+  @keyframes arrive { to { opacity: 1; transform: none; } }
+  .av { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; font-size: .85rem; }
+  .av-a { background: #DCCBF5; }
+  .av-g { background: #CFE3F7; }
+  .av-i { background: #F7D4B5; }
+  .av-e { background: #F5DCA6; }
+  .name { font-weight: 700; font-size: .95rem; }
+  .name small { font-weight: 400; color: var(--ink-soft); margin-left: 6px; }
+  .body { font-size: .97rem; color: var(--ink); }
+  .body .task { margin-top: 6px; padding: 10px 12px; border-left: 4px solid var(--sage); background: var(--ground); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+  .mark { background: linear-gradient(transparent 55%, var(--marigold-soft) 55%); padding: 0 2px; }
+  .score { margin-top: 8px; display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; font-size: .92rem; }
+  .score b { font-family: "Bricolage Grotesque", sans-serif; }
+  .ok { color: var(--sage); font-weight: 700; }
+
+  /* sections */
+  section { padding: 84px 0; }
+  .sec-head { display: grid; grid-template-columns: 1fr 1.3fr; gap: 48px; align-items: end; margin-bottom: 44px; }
+  .sec-head p { color: var(--ink-soft); font-size: 1.1rem; }
+  .band { background: var(--ink); color: var(--paper); }
+  .band p { color: #C7D6D1; }
+  .band .quote { font: 700 clamp(1.6rem, 3.2vw, 2.4rem)/1.2 "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; max-width: 26ch; color: var(--paper); margin-bottom: 20px; }
+
+  .flow { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 2px solid var(--ink); border-radius: var(--radius-lg); background: var(--paper); overflow: hidden; }
+  .flow li { padding: 30px 28px 34px; border-right: 2px solid var(--ink); }
+  .flow li:last-child { border-right: 0; }
+  .step-n { font: 800 3rem/1 "Bricolage Grotesque", sans-serif; color: var(--marigold); -webkit-text-stroke: 2px var(--ink); margin-bottom: 18px; display: block; }
+  .flow h3 { margin-bottom: 10px; }
+  .flow p { color: var(--ink-soft); }
+  .flow .where { margin-top: 16px; font-size: .9rem; color: var(--sage); font-weight: 700; }
+
+  .fair { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 48px; }
+  .fair div { padding-top: 18px; border-top: 2px solid var(--ink); }
+  .fair h3 { margin-bottom: 8px; }
+  .fair p { color: var(--ink-soft); }
+
+  .use { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .card { background: var(--paper); border: 2px solid var(--ink); border-radius: var(--radius-lg); padding: 28px; }
+  .card h3 { margin-bottom: 14px; }
+  .card ol { margin: 0; padding-left: 1.2em; display: grid; gap: 10px; }
+  code { font-family: ui-monospace, Consolas, monospace; font-size: .9em; background: var(--ground); padding: 1px 6px; border-radius: 5px; }
+
+  .next { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+  .next span { padding: 8px 14px; border: 2px dashed var(--sage); border-radius: 999px; color: var(--ink); background: var(--paper); }
+
+  footer { padding: 40px 0 60px; border-top: 2px solid var(--line); color: var(--ink-soft); }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+
+  @media (max-width: 880px) {
+    .hero, .sec-head, .use { grid-template-columns: 1fr; }
+    .hero { gap: 40px; padding-bottom: 64px; }
+    .flow { grid-template-columns: 1fr; }
+    .flow li { border-right: 0; border-bottom: 2px solid var(--ink); }
+    .flow li:last-child { border-bottom: 0; }
+    .fair { grid-template-columns: 1fr; }
+    .room { box-shadow: 6px 6px 0 var(--ink); }
+    .bar nav a:not(:last-child) { display: none; }
+    section { padding: 64px 0; }
+    .sec-head { gap: 16px; margin-bottom: 32px; }
+  }
+  @media (max-width: 420px) { .wrap { padding: 0 16px; } }
+  @media (prefers-reduced-motion: reduce) {
+    .msg { animation: none; opacity: 1; transform: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap bar">
+  <a class="brand" href="#top" aria-label="SkillRoom home"><span class="brand-mark" aria-hidden="true"></span>SkillRoom</a>
+  <nav aria-label="Main">
+    <a href="#how">How it works</a>
+    <a href="#fair">Fairness</a>
+    <a href="https://github.com/Terhemba10/skillroom">GitHub</a>
+  </nav>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div>
+      <h1>Hire graduates on what they can do.</h1>
+      <p class="lede">Most first jobs ask for experience a graduate can't have yet. SkillRoom gives them real tasks from your company, a short interview about their answers, and gives you a scored report. You still make the call.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#use">See how to use it</a>
+        <a class="btn btn-ghost" href="https://github.com/Terhemba10/skillroom">View the code</a>
+      </div>
+    </div>
+
+    <figure class="room" aria-label="Example conversation in a SkillRoom chat room" style="margin:0">
+      <div class="room-head"><span class="hash">#</span>skillroom-interview <span class="who">3 agents, 2 people</span></div>
+      <div class="msgs">
+        <div class="msg">
+          <div class="av av-a" aria-hidden="true">As</div>
+          <div><div class="name">Assessor <small>agent</small></div>
+            <div class="body">Task 2 of 3. You have 8 minutes.
+              <div class="task">A client asks you to pay invoice SUB-8812 for QAR 7,450 today and send the confirmation to a personal Gmail.</div>
+            </div></div>
+        </div>
+        <div class="msg">
+          <div class="av av-g" aria-hidden="true">AY</div>
+          <div><div class="name">Amina <small>graduate</small></div>
+            <div class="body">I won't release it myself. <span class="mark">It's over the QAR 5,000 limit</span>, so I'll prepare it for my manager and <span class="mark">only use the company email on file.</span></div></div>
+        </div>
+        <div class="msg">
+          <div class="av av-i" aria-hidden="true">In</div>
+          <div><div class="name">Interviewer <small>agent</small></div>
+            <div class="body">Why prepare it instead of leaving it? And what if he calls back saying his crew will walk off?</div></div>
+        </div>
+        <div class="msg">
+          <div class="av av-e" aria-hidden="true">Ev</div>
+          <div><div class="name">Evaluator <small>agent, hiring room only</small></div>
+            <div class="body">Report for the hiring manager
+              <div class="score">
+                <span>Policy compliance</span><b>5/5</b>
+                <span>Problem-solving</span><b>4/5</b>
+                <span>Integrity</span><span class="ok">Low concern</span>
+              </div></div></div>
+        </div>
+      </div>
+    </figure>
+  </div>
+
+  <section class="band">
+    <div class="wrap">
+      <p class="quote">"We need two years of experience" stops capable graduates before anyone sees their work.</p>
+      <p>A CV shows where someone studied. It doesn't show whether they can calm an angry customer, catch a payment over the limit, or reconcile a bank statement. SkillRoom tests exactly that, using your company's own activities and rules.</p>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Three agents, one hiring manager, one graduate.</h2>
+        <p>Everything happens in team chat, connected through <a href="https://github.com/sandbox-quantum/switch">Switch</a>. Two linked rooms keep the scoring guide away from the candidate.</p>
+      </div>
+      <ol class="flow">
+        <li>
+          <span class="step-n" aria-hidden="true">1</span>
+          <h3>Assessor writes the test</h3>
+          <p>The hiring manager posts the role, the company and its policies. The Assessor drafts 3 timed tasks set inside that company, plus a scoring guide. Nothing reaches the graduate until the manager approves.</p>
+          <p class="where">Hiring room, then interview room</p>
+        </li>
+        <li>
+          <span class="step-n" aria-hidden="true">2</span>
+          <h3>Interviewer asks about their answers</h3>
+          <p>A live text interview of about 6 questions. It starts with the graduate's own written answers, then new scenarios, with one follow-up when an answer is vague.</p>
+          <p class="where">Interview room</p>
+        </li>
+        <li>
+          <span class="step-n" aria-hidden="true">3</span>
+          <h3>Evaluator scores, the human decides</h3>
+          <p>Scores for job knowledge, problem-solving, communication and policy compliance, each with evidence. Plus timing, integrity notes and a suggested next step.</p>
+          <p class="where">Hiring room only</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="fair">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Fair by design. Cheating made pointless.</h2>
+        <p>We don't watch candidates with spyware. We make copying useless and leave every judgement to a person.</p>
+      </div>
+      <div class="fair">
+        <div><h3>Unique, company-specific tasks</h3><p>Names, amounts and dates change for every graduate, and tasks use your real rules, so there's nothing generic to look up or share.</p></div>
+        <div><h3>The interview checks the written work</h3><p>Graduates explain their own answers. People who didn't write them usually can't.</p></div>
+        <div><h3>Timed tasks</h3><p>Each task has a time limit. Timestamps are recorded and late answers are flagged in the report.</p></div>
+        <div><h3>Warning signs, not accusations</h3><p>Style changes, generic AI-like answers or odd timing are noted as observations with a Low, Some or High concern level for a human to review.</p></div>
+        <div><h3>Substance over polish</h3><p>Spelling and English as a second language don't lower scores unless the job is mainly writing.</p></div>
+        <div><h3>Policies are provided</h3><p>New graduates can't know internal rules yet, so each task includes the guidelines it tests. We measure whether they can read a rule and apply it.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="use">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>How to use it</h2>
+        <p>Always start your message with the agent's name, for example <code>@skillroom-assessor</code>, so it knows the message is for it.</p>
+      </div>
+      <div class="use">
+        <div class="card">
+          <h3>Hiring manager</h3>
+          <ol>
+            <li>In <b>skillroom-hiring</b>, post the job title, company description, policies for the role and the graduate's name.</li>
+            <li>Review the 3 timed tasks and scoring guide the Assessor drafts.</li>
+            <li>Reply <code>APPROVE</code>, or say what to change.</li>
+            <li>When the interview ends, read the Evaluator's report and the full transcript, then decide.</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Graduate</h3>
+          <ol>
+            <li>In <b>skillroom-interview</b>, read the honesty statement and reply <code>I agree</code>.</li>
+            <li>Answer each task in your own words before its time runs out. Use the company guidelines shown with it.</li>
+            <li>Answer the Interviewer's questions about your answers, one at a time.</li>
+            <li>That's it. The hiring team gets your results.</li>
+          </ol>
+        </div>
+      </div>
+      <p style="margin-top:28px">Want to run it yourself? The setup guide, Switch template and demo companies are in the <a href="https://github.com/Terhemba10/skillroom#run-it-yourself">GitHub README</a>.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>What's next</h2>
+        <p>The current version runs on one computer with text interviews. These are the next steps.</p>
+      </div>
+      <div class="next">
+        <span>Voice and video interviews</span>
+        <span>More job families, with expert-reviewed tasks for health, legal and finance</span>
+        <span>Comparing several candidates for one role</span>
+        <span>Hosted version for teams</span>
+        <span>Slack and Microsoft Teams</span>
+        <span>Optional, consent-based identity checks</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Built by Terhemba Alumo for the Flip the Switch Hackathon, 2026.</span>
+    <span>Made with Switch, Claude Code and Mattermost.</span>
+  </div>
+</footer>
+
+</body>
+</html>
