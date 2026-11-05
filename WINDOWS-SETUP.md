@@ -1,6 +1,6 @@
 # Reproduce SkillRoom on Windows
 
-These are the exact steps, commands and versions SkillRoom was built and tested with on a Windows 11 PC. About 45–60 minutes the first time.
+These are the exact steps, commands and versions SkillRoom was built and tested with on a Windows 11 PC. About 45–60 minutes the first time. Steps 3 and 4 are only needed on Windows; on Mac and Linux the template does them for you.
 
 ## What we used
 
@@ -64,30 +64,54 @@ docker version
 
 The template form doesn't work on Windows yet (every provider shows "Not supported here", because SDK sessions need a POSIX SSH host). So create the agents by hand:
 
-**Your Agents → New agent**, three times. It runs as a managed agent on your PC. Copy each agent's name, description, "who can talk to it" setting and instructions from:
+**Your Agents → New agent**, three times, with **Claude Code** as the agent type. It runs as a managed agent on your PC. Copy each agent's name, description and instructions from:
 
-- [`agents/assessor.md`](agents/assessor.md): `skillroom-assessor`, **Anyone**
-- [`agents/interviewer.md`](agents/interviewer.md): `skillroom-interviewer`, **Anyone**
-- [`agents/evaluator.md`](agents/evaluator.md): `skillroom-evaluator`, **Me and my agents** (the default). This keeps graduates from reaching the Evaluator.
+- [`agents/assessor.md`](agents/assessor.md): `skillroom-assessor`
+- [`agents/interviewer.md`](agents/interviewer.md): `skillroom-interviewer`
+- [`agents/evaluator.md`](agents/evaluator.md): `skillroom-evaluator`
 
 Tip: fill in the name and description first, then paste the instructions. If you paste first, the form can shift and the text lands in the wrong box.
 
+### Set who can talk to each agent
+
+Click the agent in the sidebar, then the **gear icon** under its picture to open **Agent settings**. Scroll to **General → Who can talk to your agent**:
+
+| Agent | Who can talk to your agent | Why |
+|---|---|---|
+| skillroom-assessor | **Anyone** | The graduate must be able to answer its tasks |
+| skillroom-interviewer | **Anyone** | The graduate must be able to answer its questions |
+| skillroom-evaluator | **Me and my agents (default)** | Only you and the other agents can reach it, so a graduate can't talk to the scorer |
+
+Keep **Auto mode** on (the default) so the agents can reply without asking you about every message.
+
+### Changing instructions later
+
+Same place: **Agent settings → Agent instructions**. Paste the new text, then click **Save** in the yellow **Unsaved changes** bar at the top (or press Ctrl+S). The agent restarts and shows "Connecting" for a few seconds.
+
 ## 4. Create the two rooms
 
-In **Your Rooms**, create:
+In **Your Rooms**, create two rooms and bridge them to **Mattermost**:
 
-| Room | Agents | People |
-|---|---|---|
-| `skillroom-hiring` | assessor, interviewer, evaluator | you (hiring manager) |
-| `skillroom-interview` | assessor, interviewer (never the evaluator) | you (and the graduate) |
+| Room | Description | Agents | People |
+|---|---|---|---|
+| `skillroom-hiring` | Hiring manager sets up the job and receives the scored report | assessor, interviewer, evaluator | you (hiring manager) |
+| `skillroom-interview` | Where the graduate takes the written assessment and the live interview | assessor, interviewer (**never** the evaluator) | you and the graduate |
+
+To add the agents: open the room, click the **Configuration** tab, then **Participants → + Add agent**. (You can also open an agent and click **Add to room**.) The Configuration tab should then show, for example, "3 agents" for skillroom-hiring.
+
+**Linking the rooms.** On Mac and Linux the template links the two rooms. On Windows we found no link option on the room's Configuration page, and it isn't needed. The Assessor and Interviewer are members of both rooms, so they carry the work from one room to the other. The Evaluator stays out of the interview room, which keeps the scoring hidden from the graduate.
 
 Then post each room's kickoff message from [`agents/kickoffs.md`](agents/kickoffs.md) so the agents introduce themselves.
 
 If creating a room shows a timeout error, refresh the list first. In our test the room had been created anyway.
 
-## 5. Run a test
+## 5. Open Mattermost and sign in
 
-1. Open Mattermost from Switch Console and go to **skillroom-hiring**.
+Open a room, click the **Configuration** tab, then **Open in Mattermost**. Mattermost opens in your browser (in our setup at `http://localhost:60024/switch/channels/`). If it asks where to view it, choose **View in Browser**, then log in.
+
+## 6. Run a test
+
+1. In Mattermost, go to **skillroom-hiring**.
 2. Paste [`demo-companies/brightbooks-accounting.md`](demo-companies/brightbooks-accounting.md) and start the message with `@skillroom-assessor`.
 3. Read the draft tasks and reply `APPROVE`.
 4. Go to **skillroom-interview**, reply `I agree`, then answer the 3 timed tasks and the interview as the graduate. To play the graduate separately, add a second Mattermost account to this room.
@@ -105,6 +129,7 @@ Give each reply 1–3 minutes. The server, Mattermost and three Claude Code sess
 | Mattermost toggle won't turn on: "docker version" command failed | Docker isn't ready yet. Wait for **Engine running** in Docker Desktop, then try again |
 | Server stuck on "Stopping the running server…" or a postgres timeout | Close Switch Console, reopen it and click **Start** again |
 | Agents disappear ("couldn't reach Default") | **Admin → Status → Restart** |
+| "Could not reach the server… localhost:60380… aborted due to timeout", or an agent shows "Machine offline" | The PC is busy. Wait 30–60 seconds and click again. If it stays, **Admin → Status → Restart** |
 | New agent: "Login could not be checked" | Make sure `claude` is signed in, then try again |
 | `claude` not recognised | Run the PATH command in step 1 and reopen PowerShell |
 

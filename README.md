@@ -92,6 +92,12 @@ net start winnat
 
 On Windows the template form marks every provider "Not supported here", so you create the three agents by hand (**Your Agents → New agent**) and the two rooms in **Your Rooms**. The ready-to-paste settings and instructions are in [`agents/`](agents).
 
+Where things live in Switch Console:
+- **Who can talk to an agent:** agent → gear icon → **Agent settings → General → Who can talk to your agent**. Assessor and Interviewer: **Anyone**. Evaluator: **Me and my agents (default)**.
+- **Agents in a room:** room → **Configuration** tab → **Participants → + Add agent**.
+- **Mattermost:** room → **Configuration** tab → **Open in Mattermost** (ours ran at `http://localhost:60024`).
+- **Fixes:** Docker or WSL errors, the port 60024 error, agents disappearing: see the [troubleshooting table](WINDOWS-SETUP.md#troubleshooting).
+
 ## Run it yourself (Mac / Linux)
 
 **You need:** [Switch Console](https://github.com/sandbox-quantum/switch#getting-started), Docker Desktop, and Claude Code (signed in).
