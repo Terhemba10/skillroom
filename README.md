@@ -95,7 +95,7 @@ On Windows the template form marks every provider "Not supported here", so you c
 Where things live in Switch Console:
 - **Who can talk to an agent:** agent → gear icon → **Agent settings → General → Who can talk to your agent**. Assessor and Interviewer: **Anyone**. Evaluator: **Me and my agents (default)**.
 - **Agents in a room:** room → **Configuration** tab → **Participants → + Add agent**.
-- **Mattermost:** room → **Configuration** tab → **Open in Mattermost** (ours ran at `http://localhost:60024`).
+- **Mattermost:** room → **Configuration** tab → **Open in Mattermost** (ours ran at `http://localhost:60024`)). The first time, create an account on the first screen.
 - **Fixes:** Docker or WSL errors, the port 60024 error, agents disappearing: see the [troubleshooting table](WINDOWS-SETUP.md#troubleshooting).
 
 ## Run it yourself (Mac / Linux)

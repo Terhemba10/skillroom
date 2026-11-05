@@ -107,7 +107,9 @@ If creating a room shows a timeout error, refresh the list first. In our test th
 
 ## 5. Open Mattermost and sign in
 
-Open a room, click the **Configuration** tab, then **Open in Mattermost**. Mattermost opens in your browser (in our setup at `http://localhost:60024/switch/channels/`). If it asks where to view it, choose **View in Browser**, then log in.
+Open a room, click the **Configuration** tab, then **Open in Mattermost**. Mattermost opens in your browser (in our setup at `http://localhost:60024/switch/channels/`). If it asks where to view it, choose **View in Browser**.
+
+**First time:** on the first screen, create a Mattermost account (that's how we did it). Use the same account each time after that. To play the graduate separately, create a second account, then add it to **skillroom-interview** (room → **Configuration** → **Participants**).
 
 ## 6. Run a test
 
