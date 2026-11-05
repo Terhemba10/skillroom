@@ -129,6 +129,33 @@ If Switch Console won't create agents from the template (on Windows it currently
 3. In each room, post the room's `kickoff:` message from the template so the agents introduce themselves.
 4. Continue from step 4 of **Run it yourself** above.
 
+## Give someone access to the channels
+
+New Mattermost accounts only see **Town Square** and **Off-Topic**. Add each person to the SkillRoom channels for their role:
+
+| Role | Channels | Why |
+|---|---|---|
+| Hiring manager | `skillroom-hiring` and `skillroom-interview` | Sets up the job, approves the test, reads the report, and can watch the interview |
+| Graduate | `skillroom-interview` **only** | Must never be in the hiring room, because it shows the scoring guide and the Evaluator |
+
+`skillroom-assessor`, `skillroom-interviewer` and `skillroom-evaluator` are **agents, not channels**. They are already members of the rooms. Talk to them by typing `@skillroom-assessor` (and so on) inside a channel.
+
+**Option A: the person joins in Mattermost.** They create an account on the first screen, then click **+ Add Channels → Browse channels** and join the right channel for their role (above).
+
+**Option B: you add them with a script.** After they have created their account, run this in PowerShell from the repo folder. It asks for your own Mattermost username and password, and uses them only for your local Mattermost:
+
+```powershell
+# a graduate: interview room only
+.\scripts\add-to-skillroom.ps1 -User <their-username> -Role graduate
+
+# a hiring manager: both rooms
+.\scripts\add-to-skillroom.ps1 -User <their-username> -Role manager
+```
+
+If PowerShell blocks the script, run `Set-ExecutionPolicy -Scope Process Bypass` first (this only affects the current window). If your Mattermost runs on a different port, add `-Url http://localhost:<port>`.
+
+They then refresh Mattermost (**F5**) and see the channels.
+
 ## Example run
 
 [`examples/brightbooks-run.md`](examples/brightbooks-run.md) is a real test run copied from Mattermost: the manager's setup, the Assessor's draft and scoring guide, APPROVE, three timed tasks with timestamps, and the start of the live interview. It also says honestly where that run stopped (the Evaluator's machine went offline) and what we changed because of it. The candidate is fictional; an AI wrote her answers to test the workflow.
