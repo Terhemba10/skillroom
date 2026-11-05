@@ -176,6 +176,7 @@ Same workflow, completely different tests: SkillRoom adapts to any job.
 - More job families, with expert-reviewed tasks for regulated roles (health, legal, finance)
 - Comparing several candidates for one role
 - Connecting to Slack or Microsoft Teams for companies that already use them
+- Automatic channel access: new graduate accounts join the interview room by themselves (today you add them once, see [Give someone access](#give-someone-access-to-the-channels))
 
 ## Built with
 
