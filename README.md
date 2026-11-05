@@ -140,21 +140,7 @@ New Mattermost accounts only see **Town Square** and **Off-Topic**. Add each per
 
 `skillroom-assessor`, `skillroom-interviewer` and `skillroom-evaluator` are **agents, not channels**. They are already members of the rooms. Talk to them by typing `@skillroom-assessor` (and so on) inside a channel.
 
-**Option A: the person joins in Mattermost.** They create an account on the first screen, then click **+ Add Channels → Browse channels** and join the right channel for their role (above).
-
-**Option B: you add them with a script.** After they have created their account, run this in PowerShell from the repo folder. It asks for your own Mattermost username and password, and uses them only for your local Mattermost:
-
-```powershell
-# a graduate: interview room only
-.\scripts\add-to-skillroom.ps1 -User <their-username> -Role graduate
-
-# a hiring manager: both rooms
-.\scripts\add-to-skillroom.ps1 -User <their-username> -Role manager
-```
-
-If PowerShell blocks the script, run `Set-ExecutionPolicy -Scope Process Bypass` first (this only affects the current window). If your Mattermost runs on a different port, add `-Url http://localhost:<port>`.
-
-They then refresh Mattermost (**F5**) and see the channels.
+**How to add someone:** they create an account on the first screen of Mattermost, then click **+ Add Channels → Browse channels** and join the channel for their role (above). They refresh Mattermost (**F5**) to see the channels.
 
 ## Example run
 
