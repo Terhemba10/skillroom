@@ -1,0 +1,113 @@
+# Reproduce SkillRoom on Windows
+
+These are the exact steps, commands and versions SkillRoom was built and tested with on a Windows 11 PC. About 45–60 minutes the first time.
+
+## What we used
+
+| Piece | Version / setting |
+|---|---|
+| Windows | Windows 11 |
+| Switch Console | v0.40.1 (Windows early access) |
+| Switch host | **Local Switch server** on "This computer" (switch-core 0.31.0, workspace **Default**) |
+| Agent provider | Claude Code CLI v2.1.318, running as **managed agents** |
+| Team chat | Mattermost, started by Switch Console inside Docker Desktop |
+| Mattermost address | `http://localhost:60024` in our setup (the port may be different on your PC) |
+| Docker | Docker Desktop with WSL 2 |
+
+## 1. Install the tools
+
+**Claude Code CLI.** Open PowerShell (normal, not admin):
+
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+Add it to your PATH, then close and reopen PowerShell:
+
+```powershell
+[Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path","User") + ";$env:USERPROFILE\.local\bin", "User")
+```
+
+Check it works and sign in:
+
+```powershell
+claude --version
+claude
+```
+
+Sign in with your Claude account. If it asks whether to trust the folder, choose **No, exit**. Signing in is all you need here. Switch needs the CLI; the Claude desktop app is not enough.
+
+**WSL 2.** Open PowerShell **as administrator**:
+
+```powershell
+wsl --update
+```
+
+Restart the PC.
+
+**Docker Desktop.** Install it from docker.com (the Windows AMD64 version for most PCs) and start it. Wait until the bottom-left corner says **Engine running**. Check it in PowerShell:
+
+```powershell
+docker version
+```
+
+**Switch Console.** Install it from the [Switch repository](https://github.com/sandbox-quantum/switch#getting-started).
+
+## 2. Start the Switch host and Mattermost
+
+1. Open Switch Console and choose **Local Switch server → This computer**.
+2. Go to **Admin → Status** and click **Start**. Wait for **Running**.
+3. On the same page, turn on **Mattermost**. Switch Console sets it up in Docker. The first time takes a few minutes.
+4. When it's ready, **Town Square** and **Off-Topic** appear under Rooms. That means Mattermost is running.
+
+## 3. Create the three agents
+
+The template form doesn't work on Windows yet (every provider shows "Not supported here", because SDK sessions need a POSIX SSH host). So create the agents by hand:
+
+**Your Agents → New agent**, three times. It runs as a managed agent on your PC. Copy each agent's name, description, "who can talk to it" setting and instructions from:
+
+- [`agents/assessor.md`](agents/assessor.md): `skillroom-assessor`, **Anyone**
+- [`agents/interviewer.md`](agents/interviewer.md): `skillroom-interviewer`, **Anyone**
+- [`agents/evaluator.md`](agents/evaluator.md): `skillroom-evaluator`, **Me and my agents** (the default). This keeps graduates from reaching the Evaluator.
+
+Tip: fill in the name and description first, then paste the instructions. If you paste first, the form can shift and the text lands in the wrong box.
+
+## 4. Create the two rooms
+
+In **Your Rooms**, create:
+
+| Room | Agents | People |
+|---|---|---|
+| `skillroom-hiring` | assessor, interviewer, evaluator | you (hiring manager) |
+| `skillroom-interview` | assessor, interviewer (never the evaluator) | you (and the graduate) |
+
+Then post each room's kickoff message from [`agents/kickoffs.md`](agents/kickoffs.md) so the agents introduce themselves.
+
+If creating a room shows a timeout error, refresh the list first. In our test the room had been created anyway.
+
+## 5. Run a test
+
+1. Open Mattermost from Switch Console and go to **skillroom-hiring**.
+2. Paste [`demo-companies/brightbooks-accounting.md`](demo-companies/brightbooks-accounting.md) and start the message with `@skillroom-assessor`.
+3. Read the draft tasks and reply `APPROVE`.
+4. Go to **skillroom-interview**, reply `I agree`, then answer the 3 timed tasks and the interview as the graduate. To play the graduate separately, add a second Mattermost account to this room.
+5. The Evaluator posts the scored report in **skillroom-hiring**.
+
+Give each reply 1–3 minutes. The server, Mattermost and three Claude Code sessions all share one PC.
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| Docker won't start: "WSL kernel missing" | Run `wsl --update` in admin PowerShell, then restart |
+| Docker says "WSL is finishing an upgrade…" | Restart the PC |
+| Mattermost: "ports are not available… 127.0.0.1:60024… forbidden by its access permissions" | Admin PowerShell: `net stop winnat` then `net start winnat`, then turn Mattermost on again. If that doesn't work, restart the PC |
+| Mattermost toggle won't turn on: "docker version" command failed | Docker isn't ready yet. Wait for **Engine running** in Docker Desktop, then try again |
+| Server stuck on "Stopping the running server…" or a postgres timeout | Close Switch Console, reopen it and click **Start** again |
+| Agents disappear ("couldn't reach Default") | **Admin → Status → Restart** |
+| New agent: "Login could not be checked" | Make sure `claude` is signed in, then try again |
+| `claude` not recognised | Run the PATH command in step 1 and reopen PowerShell |
+
+## Mac and Linux
+
+You can skip steps 3 and 4: import [`skillroom.template.yaml`](skillroom.template.yaml) in **Templates** and click **Create**. It makes the agents, rooms, link and kickoff messages in one go.

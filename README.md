@@ -68,16 +68,31 @@ We don't watch graduates with spyware. We make cheating pointless:
 - **Fair scoring:** spelling and English as a second language don't lower scores unless the job is mainly writing; the interviewer never asks about personal characteristics.
 - **The AI advises, the human decides.**
 
-## Windows setup notes
+## Windows setup
 
-Built and tested on Windows with Switch Console (early access). What we learned:
+Built and tested on Windows 11 with Switch Console v0.40.1, a **Local Switch server** on this computer (switch-core 0.31.0), Claude Code CLI v2.1.318 running as managed agents, and Mattermost in Docker Desktop (served at `http://localhost:60024` in our setup).
 
-- Install the **Claude Code CLI** (`irm https://claude.ai/install.ps1 | iex`), add `%USERPROFILE%\.local\bin` to PATH, and run `claude` once to sign in. Switch needs the CLI, not the desktop app.
-- On Windows, agents run as **managed agents**. The template form currently marks every provider "Not supported here", so we created the three agents with **Your Agents → New agent** using the same instructions as the template. See [Manual setup](#manual-setup-if-the-template-wont-import) below.
-- Mattermost needs Docker, and Docker needs a working **WSL 2**. If Docker won't start, run `wsl --update`, then restart.
-- Give each reply 1–3 minutes: the server, Mattermost and several Claude Code sessions share one PC.
+**Full step-by-step guide with every command and a troubleshooting table: [WINDOWS-SETUP.md](WINDOWS-SETUP.md).**
 
-## Run it yourself
+The short version:
+
+```powershell
+# 1. Claude Code CLI, then reopen PowerShell and sign in
+irm https://claude.ai/install.ps1 | iex
+[Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path","User") + ";$env:USERPROFILE\.local\bin", "User")
+claude
+
+# 2. WSL 2 for Docker (admin PowerShell), then restart
+wsl --update
+
+# 3. If Mattermost says port 60024 is forbidden (admin PowerShell)
+net stop winnat
+net start winnat
+```
+
+On Windows the template form marks every provider "Not supported here", so you create the three agents by hand (**Your Agents → New agent**) and the two rooms in **Your Rooms**. The ready-to-paste settings and instructions are in [`agents/`](agents).
+
+## Run it yourself (Mac / Linux)
 
 **You need:** [Switch Console](https://github.com/sandbox-quantum/switch#getting-started), Docker Desktop, and Claude Code (signed in).
 
@@ -92,7 +107,7 @@ Run one graduate at a time per interview room. To assess several at once, import
 
 ### Manual setup (if the template won't import)
 
-If Switch Console won't create agents from the template (on Windows it currently marks every provider "Not supported here"), build the same setup by hand. Everything you need is in [`skillroom.template.yaml`](skillroom.template.yaml); replace `{team}` with `skillroom` wherever it appears.
+If Switch Console won't create agents from the template (on Windows it currently marks every provider "Not supported here"), build the same setup by hand. The ready-to-paste versions are in [`agents/`](agents) (one file per agent, plus [`kickoffs.md`](agents/kickoffs.md)), generated from [`skillroom.template.yaml`](skillroom.template.yaml) with `{team}` replaced by `skillroom`. Windows users: follow [WINDOWS-SETUP.md](WINDOWS-SETUP.md).
 
 1. In **Your Agents → New agent**, create three agents using Claude Code:
 
