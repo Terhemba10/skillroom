@@ -5,276 +5,456 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SkillRoom</title>
 <meta name="description" content="SkillRoom lets employers hire graduates on what they can do, not on years of experience. Built on Switch for the Flip the Switch Hackathon.">
+<meta name="theme-color" content="#EEF0F7">
+<script>document.documentElement.classList.add("js");</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
 <style>
   :root {
-    --ground: #E9EFEA;
-    --paper: #FFFFFF;
-    --ink: #17302C;
-    --ink-soft: #4C625D;
-    --sage: #3F7A68;
-    --marigold: #F2B33D;
-    --marigold-soft: #FBE3AE;
-    --line: #C9D6CF;
-    --radius-lg: 18px;
-    --radius-sm: 8px;
+    /* Light surfaces */
+    --bg: #EEF0F7;
+    --surface: #FFFFFF;
+    --surface-2: #F6F7FB;
+    --border: #DCDFEA;
+    /* Text */
+    --ink: #0B0D17;
+    --ink-soft: #5A5F73;
+    /* Brand */
+    --cobalt: #2236F0;
+    --cobalt-deep: #1424C4;
+    --cobalt-tint: #DDE1FF;
+    --cobalt-light: #8C97FF;
+    /* Agents */
+    --assessor: #7A5CFA;
+    --interviewer: #1FA9BE;
+    --evaluator: #F5A524;
+    /* Dark surfaces */
+    --night: #0B0D17;
+    --night-2: #141729;
+    --night-line: rgba(255, 255, 255, .1);
+    --night-text: #F0F1FA;
+    --night-soft: #A3A8BF;
+
+    --radius-lg: 22px;
+    --radius-sm: 10px;
+    --ease-out: cubic-bezier(.2, .8, .2, 1);
+    --shadow-soft: 0 1px 2px rgba(11, 13, 23, .06), 0 24px 48px -24px rgba(11, 13, 23, .28);
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
     margin: 0;
-    background: var(--ground);
+    background: var(--bg);
     color: var(--ink);
-    font: 400 1.0625rem/1.6 "Atkinson Hyperlegible", system-ui, sans-serif;
+    font: 400 1.0625rem/1.6 "Inter", system-ui, sans-serif;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
   }
-  a { color: var(--sage); text-underline-offset: 3px; }
-  a:focus-visible, button:focus-visible { outline: 3px solid var(--marigold); outline-offset: 3px; border-radius: 4px; }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
-  h1, h2, h3 { font-family: "Bricolage Grotesque", sans-serif; line-height: 1.05; margin: 0; }
-  h1 { font-weight: 800; font-size: clamp(2.6rem, 6vw, 4.6rem); letter-spacing: -0.03em; }
-  h2 { font-weight: 700; font-size: clamp(1.8rem, 3.4vw, 2.6rem); letter-spacing: -0.02em; }
-  h3 { font-weight: 700; font-size: 1.3rem; letter-spacing: -0.01em; }
+  a { color: var(--cobalt); text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 3px; border-radius: 6px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+  h1, h2, h3 { font-family: "Inter Tight", "Inter", sans-serif; line-height: 1.02; margin: 0; }
+  h1 { font-weight: 500; font-size: clamp(2.8rem, 6.6vw, 5.4rem); letter-spacing: -0.045em; }
+  h1 em { font-style: normal; color: var(--cobalt); }
+  h2 { font-weight: 500; font-size: clamp(2rem, 4vw, 3.3rem); letter-spacing: -0.035em; }
+  h3 { font-weight: 600; font-size: 1.28rem; letter-spacing: -0.015em; line-height: 1.15; }
   p { margin: 0; max-width: 62ch; }
+  .mono { font: 500 .75rem/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; color: var(--ink-soft); margin-bottom: 20px; }
+  .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--cobalt); }
 
   /* top bar */
-  .bar { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; }
-  .brand { font: 800 1.35rem "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 10px; }
-  .brand-mark { width: 28px; height: 28px; border-radius: 8px; background: var(--ink); position: relative; }
-  .brand-mark::after { content: ""; position: absolute; inset: 7px 7px 7px 7px; border-radius: 3px; background: var(--marigold); }
-  .bar nav a { color: var(--ink); text-decoration: none; margin-left: 22px; font-weight: 700; }
-  .bar nav a:hover { text-decoration: underline; }
+  .bar { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; }
+  .brand { font: 600 1.25rem "Inter Tight", sans-serif; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 12px; perspective: 220px; }
+  .bar nav { display: flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 5px; }
+  .bar nav a { color: var(--ink); text-decoration: none; font-weight: 500; font-size: .95rem; padding: 8px 14px; border-radius: 999px; transition: background .2s, color .2s; }
+  .bar nav a:hover { background: var(--bg); }
+  .bar nav a.cta { background: var(--ink); color: #fff; }
+  .bar nav a.cta:hover { background: var(--cobalt); }
+
+  /* brand mark: a small spinning 3D cube */
+  .cube { width: 22px; height: 22px; position: relative; transform-style: preserve-3d; animation: cube 12s linear infinite; }
+  .cube i { position: absolute; inset: 0; background: var(--cobalt); border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .35); }
+  .cube i:nth-child(1) { transform: translateZ(11px); }
+  .cube i:nth-child(2) { transform: rotateY(180deg) translateZ(11px); background: var(--cobalt-deep); }
+  .cube i:nth-child(3) { transform: rotateY(90deg) translateZ(11px); background: var(--cobalt-deep); }
+  .cube i:nth-child(4) { transform: rotateY(-90deg) translateZ(11px); }
+  .cube i:nth-child(5) { transform: rotateX(90deg) translateZ(11px); background: var(--cobalt-light); }
+  .cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(11px); background: var(--ink); }
+  @keyframes cube { from { transform: rotateX(-22deg) rotateY(0); } to { transform: rotateX(-22deg) rotateY(360deg); } }
 
   /* hero */
-  .hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; padding: 40px 0 88px; }
-  .hero h1 { margin-bottom: 22px; }
-  .hero .lede { font-size: 1.2rem; color: var(--ink-soft); margin-bottom: 30px; }
+  .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; padding: 64px 0 72px; }
+  .hero h1 { margin-bottom: 28px; }
+  .hero .lede { font-size: 1.2rem; color: var(--ink-soft); margin-bottom: 34px; max-width: 48ch; }
   .actions { display: flex; flex-wrap: wrap; gap: 12px; }
-  .btn { display: inline-block; padding: 14px 22px; border-radius: 999px; font-weight: 700; text-decoration: none; border: 2px solid var(--ink); }
-  .btn-primary { background: var(--ink); color: var(--paper); }
-  .btn-primary:hover { background: var(--sage); border-color: var(--sage); }
-  .btn-ghost { color: var(--ink); }
-  .btn-ghost:hover { background: var(--paper); }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 24px; border-radius: 999px; font-weight: 500; text-decoration: none; border: 1px solid transparent; transition: transform .25s var(--ease-out), background .25s, color .25s, box-shadow .25s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary:hover { background: var(--cobalt); box-shadow: 0 14px 30px -12px rgba(34, 54, 240, .7); }
+  .btn-primary .arr { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: rgba(255, 255, 255, .16); font-size: .8rem; }
+  .btn-ghost { color: var(--ink); background: var(--surface); border-color: var(--border); }
+  .btn-ghost:hover { border-color: var(--ink); }
+  .scroll-row { display: flex; justify-content: space-between; align-items: center; color: var(--ink-soft); padding-bottom: 40px; }
+  .scroll-row span:first-child, .scroll-row span:last-child { font: 300 1.4rem/1 "Inter", sans-serif; }
 
-  /* the chat: the one bold thing */
-  .room { background: var(--paper); border-radius: var(--radius-lg); border: 2px solid var(--ink); box-shadow: 10px 10px 0 var(--ink); overflow: hidden; }
-  .room-head { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 2px solid var(--ink); font-weight: 700; }
-  .room-head .hash { color: var(--sage); }
-  .room-head .who { margin-left: auto; font-weight: 400; color: var(--ink-soft); font-size: .9rem; }
+  /* hero visual: two rooms floating in 3D space */
+  .hero-visual { perspective: 1400px; position: relative; }
+  .tilt {
+    --rx: 7deg; --ry: -14deg; --sy: 0;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(calc(var(--rx) + var(--sy) * 14deg)) rotateY(var(--ry)) translateY(calc(var(--sy) * -24px));
+    transition: transform .6s var(--ease-out);
+  }
+  .tilt .front { position: relative; transform: translateZ(40px); margin: 0; }
+  .room.ghost { position: absolute; top: -56px; left: 64px; right: -34px; transform: translateZ(-120px); background: var(--night); border-color: var(--night); color: var(--night-text); box-shadow: 0 40px 80px -30px rgba(34, 54, 240, .55); }
+  .ghost .room-head { border-color: var(--night-line); color: var(--night-text); }
+  .ghost .room-head .who { color: var(--night-soft); }
+  .ghost-body { padding: 14px 18px 120px; display: grid; gap: 9px; }
+  .ghost-body .g-title { font-weight: 600; font-size: .9rem; display: flex; align-items: center; gap: 8px; }
+  .ghost-body .g-title span { font-weight: 400; color: var(--night-soft); font-size: .8rem; }
+  .ghost-body i { display: block; height: 7px; border-radius: 4px; background: rgba(255, 255, 255, .14); }
+  .ghost-body i:first-of-type { background: rgba(245, 165, 36, .7); }
+  .orb { position: absolute; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font: 600 .74rem "Inter Tight", sans-serif; color: #fff; box-shadow: 0 18px 30px -12px rgba(11, 13, 23, .45); animation: bobz 5.5s ease-in-out infinite; }
+  .orb-a { background: radial-gradient(circle at 32% 28%, #C9BCFF 0%, var(--assessor) 45%, #3D24B8 100%); top: -30px; left: -26px; --z: 130px; }
+  .orb-i { background: radial-gradient(circle at 32% 28%, #A6F0FA 0%, var(--interviewer) 45%, #0D5E6B 100%); bottom: 46px; right: -30px; --z: 170px; animation-delay: -1.8s; }
+  .orb-e { background: radial-gradient(circle at 32% 28%, #FFE3A8 0%, var(--evaluator) 45%, #A15F00 100%); top: -88px; right: 36px; --z: -60px; animation-delay: -3.4s; }
+  @keyframes bobz { 0%, 100% { transform: translateZ(var(--z)) translateY(0); } 50% { transform: translateZ(var(--z)) translateY(-14px); } }
+
+  /* chat rooms */
+  .room { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-soft); overflow: hidden; }
+  .room-head { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid var(--border); font-weight: 600; font-size: .95rem; }
+  .room-head .hash { color: var(--cobalt); }
+  .room-head .who { margin-left: auto; font-weight: 400; color: var(--ink-soft); font-size: .85rem; }
   .msgs { padding: 18px; display: grid; gap: 16px; }
-  .msg { display: grid; grid-template-columns: 36px 1fr; gap: 12px; opacity: 0; transform: translateY(6px); animation: arrive .45s ease-out forwards; }
+  .msg { display: grid; grid-template-columns: 36px 1fr; gap: 12px; opacity: 0; transform: perspective(700px) rotateX(-42deg) translateY(14px); transform-origin: 50% 0; animation: arrive .6s var(--ease-out) forwards; }
   .msg:nth-child(2) { animation-delay: .7s; }
   .msg:nth-child(3) { animation-delay: 1.5s; }
   .msg:nth-child(4) { animation-delay: 2.3s; }
   @keyframes arrive { to { opacity: 1; transform: none; } }
-  .av { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; font-size: .85rem; }
-  .av-a { background: #DCCBF5; }
-  .av-g { background: #CFE3F7; }
-  .av-i { background: #F7D4B5; }
-  .av-e { background: #F5DCA6; }
-  .av-m { background: #BFE0D2; }
-  .name { font-weight: 700; font-size: .95rem; }
+  .av { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: .78rem; }
+  .av-a { background: #E9E3FF; color: #4A2FD0; }
+  .av-g { background: var(--cobalt-tint); color: var(--cobalt-deep); }
+  .av-i { background: #D8F4F8; color: #0D6C7B; }
+  .av-e { background: #FFEFD3; color: #9A5B00; }
+  .av-m { background: #E6E8F0; color: var(--ink); }
+  .name { font-weight: 600; font-size: .93rem; }
   .name small { font-weight: 400; color: var(--ink-soft); margin-left: 6px; }
-  .body { font-size: .97rem; color: var(--ink); }
-  .body .task { margin-top: 6px; padding: 10px 12px; border-left: 4px solid var(--sage); background: var(--ground); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
-  .mark { background: linear-gradient(transparent 55%, var(--marigold-soft) 55%); padding: 0 2px; }
-  .score { margin-top: 8px; display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; font-size: .92rem; }
-  .score b { font-family: "Bricolage Grotesque", sans-serif; }
-  .ok { color: var(--sage); font-weight: 700; }
+  .body { font-size: .95rem; color: var(--ink); }
+  .body .task { margin-top: 6px; padding: 10px 12px; border-left: 3px solid var(--cobalt); background: var(--surface-2); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+  .mark { background: linear-gradient(transparent 58%, var(--cobalt-tint) 58%); padding: 0 2px; }
+  .score { margin-top: 8px; display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; font-size: .9rem; }
+  .score b { font-family: "Inter Tight", sans-serif; font-weight: 600; }
+  .ok { color: var(--cobalt); font-weight: 600; }
 
   /* sections */
-  section { padding: 84px 0; }
-  .sec-head { display: grid; grid-template-columns: 1fr 1.3fr; gap: 48px; align-items: end; margin-bottom: 44px; }
+  section { padding: 110px 0; }
+  .sec-head { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: end; margin-bottom: 56px; }
   .sec-head p { color: var(--ink-soft); font-size: 1.1rem; }
-  .band { background: var(--ink); color: var(--paper); }
-  .band p { color: #C7D6D1; }
-  .band .quote { font: 700 clamp(1.6rem, 3.2vw, 2.4rem)/1.2 "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; max-width: 26ch; color: var(--paper); margin-bottom: 20px; }
+  .dark { background: var(--night); color: var(--night-text); }
+  .dark .sec-head p, .dark p { color: var(--night-soft); }
+  .dark a { color: var(--cobalt-light); }
+  .dark .eyebrow { color: var(--night-soft); }
+  .dark .eyebrow::before { background: var(--cobalt-light); }
+  .band { position: relative; overflow: hidden; border-radius: var(--radius-lg) var(--radius-lg) 0 0; margin: 0 12px -1px; padding-bottom: 40px; }
+  .band .quote { font: 500 clamp(1.9rem, 4.4vw, 3.6rem)/1.05 "Inter Tight", sans-serif; letter-spacing: -0.04em; max-width: 22ch; color: var(--night-text); margin-bottom: 28px; }
+  .band .quote span { color: var(--cobalt-light); }
+  .band .wrap { position: relative; }
+  .band-glow { position: absolute; width: 640px; height: 640px; right: -180px; top: -260px; border-radius: 50%; background: radial-gradient(circle, rgba(34, 54, 240, .55) 0%, rgba(34, 54, 240, 0) 70%); pointer-events: none; }
+  #how { margin: 0 12px; border-radius: 0 0 var(--radius-lg) var(--radius-lg); padding-top: 40px; }
 
-  .flow { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 2px solid var(--ink); border-radius: var(--radius-lg); background: var(--paper); overflow: hidden; }
-  .flow li { padding: 30px 28px 34px; border-right: 2px solid var(--ink); }
-  .flow li:last-child { border-right: 0; }
-  .step-n { font: 800 3rem/1 "Bricolage Grotesque", sans-serif; color: var(--marigold); -webkit-text-stroke: 2px var(--ink); margin-bottom: 18px; display: block; }
-  .flow h3 { margin-bottom: 10px; }
-  .flow p { color: var(--ink-soft); }
-  .flow .where { margin-top: 16px; font-size: .9rem; color: var(--sage); font-weight: 700; }
+  /* how it works: scroll-driven 3D scene */
+  .scrolly { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.3fr); gap: 48px; align-items: start; }
+  .scene-steps { list-style: none; margin: 0; padding: 0; }
+  .scene-step { min-height: 76vh; display: flex; align-items: center; padding: 24px 0; }
+  .step-card { background: rgba(255, 255, 255, .03); border: 1px solid var(--night-line); border-radius: var(--radius-lg); padding: 30px; opacity: .45; transform: perspective(900px) rotateY(10deg) translateZ(-40px); transform-origin: 0 50%; transition: opacity .5s, transform .7s var(--ease-out), border-color .5s, background .5s; }
+  .scene-step.on .step-card { opacity: 1; transform: none; border-color: rgba(140, 151, 255, .55); background: linear-gradient(160deg, rgba(34, 54, 240, .22), rgba(34, 54, 240, .04)); }
+  .step-n { display: block; color: var(--cobalt-light); margin-bottom: 22px; }
+  .step-card h3 { margin-bottom: 12px; font-size: 1.5rem; color: var(--night-text); }
+  .step-card p { color: var(--night-soft); }
+  .where { margin-top: 18px; color: var(--night-text); display: inline-flex; gap: 8px; align-items: center; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--night-line); }
 
-  .fair { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 48px; }
-  .fair div { padding-top: 18px; border-top: 2px solid var(--ink); }
-  .fair h3 { margin-bottom: 8px; }
-  .fair p { color: var(--ink-soft); }
+  .stage3d { position: sticky; top: 9vh; height: min(82vh, 720px); border: 1px solid var(--night-line); border-radius: 26px; background: radial-gradient(120% 90% at 50% 8%, #222A6B 0%, #12152B 45%, #0B0D17 100%); box-shadow: 0 50px 100px -50px rgba(34, 54, 240, .6); overflow: hidden; }
+  .stage3d canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .lbls { position: absolute; inset: 0; pointer-events: none; }
+  .lbl { position: absolute; left: 0; top: 0; font: 500 .74rem/1 "Inter", sans-serif; padding: 6px 10px; background: rgba(20, 23, 41, .72); color: var(--night-text); border: 1px solid rgba(255, 255, 255, .16); border-radius: 999px; white-space: nowrap; opacity: 0; transition: opacity .3s; will-change: transform; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .lbl i { width: 8px; height: 8px; border-radius: 50%; display: block; }
+  .lbl.room-l { font: 500 .7rem/1 "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; background: var(--cobalt); border-color: var(--cobalt); padding: 7px 11px; }
+  .lbl.room-l.alt { background: #0E6E7D; border-color: #0E6E7D; }
+  .lbl.doc { background: rgba(245, 165, 36, .18); border-color: rgba(245, 165, 36, .55); color: #FFE2AE; }
+  .lbl.person { color: var(--night-soft); }
+  .stage-cap { position: absolute; top: 16px; left: 16px; max-width: calc(100% - 32px); background: rgba(20, 23, 41, .7); color: var(--night-text); border: 1px solid var(--night-line); border-radius: 999px; padding: 9px 14px; font-weight: 500; font-size: .88rem; line-height: 1.2; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .stage-cap b { color: var(--cobalt-light); margin-right: 8px; font: 500 .72rem "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+  .stage-bar { position: absolute; left: 18px; right: 18px; bottom: 18px; height: 3px; border-radius: 3px; background: rgba(255, 255, 255, .1); overflow: hidden; }
+  .stage-bar span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--cobalt), var(--cobalt-light)); border-radius: 3px; }
+  .stage-hint { position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%); color: var(--night-soft); transition: opacity .4s; white-space: nowrap; }
+  .stage3d.started .stage-hint { opacity: 0; }
+  .scrolly.no3d { display: block; }
+  .no3d .stage3d { display: none; }
+  .no3d .scene-step { min-height: 0; padding: 0 0 16px; }
+  .no3d .step-card { opacity: 1; transform: none; }
 
-  .use { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-  .card { background: var(--paper); border: 2px solid var(--ink); border-radius: var(--radius-lg); padding: 28px; }
-  .card h3 { margin-bottom: 14px; }
-  .card ol { margin: 0; padding-left: 1.2em; display: grid; gap: 10px; }
-  code { font-family: ui-monospace, Consolas, monospace; font-size: .9em; background: var(--ground); padding: 1px 6px; border-radius: 5px; }
+  .fair { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .fair div { padding: 28px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); transition: transform .3s var(--ease-out), box-shadow .3s, border-color .3s; }
+  .fair div:hover { transform: translateY(-4px); box-shadow: var(--shadow-soft); border-color: var(--cobalt-tint); }
+  .fair .mono { display: block; color: var(--cobalt); margin-bottom: 26px; }
+  .fair h3 { margin-bottom: 10px; }
+  .fair p { color: var(--ink-soft); font-size: .98rem; }
 
-  .next { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
-  .next span { padding: 8px 14px; border: 2px dashed var(--sage); border-radius: 999px; color: var(--ink); background: var(--paper); }
+  .use { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; }
+  .card.inverse { background: var(--night); color: var(--night-text); border-color: var(--night); }
+  .card.inverse code { background: rgba(255, 255, 255, .1); color: var(--night-text); }
+  .card .mono { display: block; color: var(--ink-soft); margin-bottom: 18px; }
+  .card.inverse .mono { color: var(--cobalt-light); }
+  .card h3 { margin-bottom: 18px; font-size: 1.6rem; }
+  .card ol { margin: 0; padding-left: 1.2em; display: grid; gap: 12px; }
+  .js .card.ready { transition: transform .18s ease-out, box-shadow .25s; }
+  .card.ready:hover { box-shadow: var(--shadow-soft); }
+  code { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .85em; background: var(--surface-2); padding: 2px 7px; border-radius: 6px; border: 1px solid var(--border); }
+  .card.inverse code { border-color: transparent; }
 
-  footer { padding: 40px 0 60px; border-top: 2px solid var(--line); color: var(--ink-soft); }
-  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+  .next { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; perspective: 600px; }
+  .next span { padding: 12px 18px; border: 1px solid var(--border); border-radius: 999px; color: var(--ink); background: var(--surface); transition: transform .25s var(--ease-out), border-color .25s, color .25s; }
+  .next span:hover { transform: translateZ(18px) rotateX(12deg); border-color: var(--cobalt); color: var(--cobalt); }
+
+  footer { margin: 0 12px 12px; border-radius: var(--radius-lg); padding: 96px 0 40px; overflow: hidden; position: relative; }
+  footer .big { font: 500 clamp(2.6rem, 9vw, 7.5rem)/.95 "Inter Tight", sans-serif; letter-spacing: -0.05em; color: var(--night-text); margin-bottom: 40px; }
+  footer .big span { color: var(--cobalt-light); }
+  footer .row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; padding-top: 28px; border-top: 1px solid var(--night-line); color: var(--night-soft); font-size: .95rem; }
+  footer .actions { margin-bottom: 72px; }
+  footer .btn-ghost { background: transparent; color: var(--night-text); border-color: rgba(255, 255, 255, .25); }
+  footer .btn-ghost:hover { border-color: #fff; }
+  footer .btn-primary { background: var(--cobalt); color: #fff; }
+  footer .btn-primary:hover { background: #fff; color: var(--ink); }
+
+  /* scroll reveal in 3D */
+  .js [data-reveal] { opacity: 0; transform: perspective(900px) rotateX(16deg) translateY(40px); transform-origin: 50% 100%; transition: opacity .8s var(--ease-out), transform .9s var(--ease-out); transition-delay: var(--d, 0s); }
+  .js [data-reveal].in { opacity: 1; transform: none; }
 
   /* try the demo */
-  .demo { display: grid; grid-template-columns: 280px 1fr; gap: 28px; align-items: start; }
-  .demo-side { display: grid; gap: 18px; }
+  .demo { display: grid; grid-template-columns: 290px 1fr; gap: 24px; align-items: start; }
+  .demo-side { display: grid; gap: 16px; }
   .pick { display: grid; gap: 10px; }
-  .pick button { text-align: left; font: inherit; color: var(--ink); background: var(--paper); border: 2px solid var(--ink); border-radius: 14px; padding: 14px 16px; cursor: pointer; }
-  .pick button b { display: block; font-family: "Bricolage Grotesque", sans-serif; font-size: 1.05rem; }
-  .pick button span { color: var(--ink-soft); font-size: .92rem; }
-  .pick button[aria-pressed="true"] { background: var(--marigold-soft); box-shadow: 4px 4px 0 var(--ink); }
-  .stage { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: .95rem; }
-  .stage li { padding: 6px 10px; border-radius: 8px; color: var(--ink-soft); }
-  .stage li.on { background: var(--paper); color: var(--ink); font-weight: 700; box-shadow: inset 4px 0 0 var(--sage); }
-  .note { font-size: .88rem; color: var(--ink-soft); }
-  .live { background: var(--paper); border: 2px solid var(--ink); border-radius: 14px; padding: 16px; display: grid; gap: 10px; }
-  .live b { font-family: "Bricolage Grotesque", sans-serif; font-size: 1.05rem; }
-  .live p { font-size: .92rem; color: var(--ink-soft); }
-  .live .btn { text-align: center; }
-  .demo .room { box-shadow: 8px 8px 0 var(--ink); }
-  .tabs { display: flex; border-bottom: 2px solid var(--ink); }
-  .tabs span { flex: 1; padding: 12px 16px; font-weight: 700; color: var(--ink-soft); }
-  .tabs span.on { background: var(--ink); color: var(--paper); }
-  .tabs span + span { border-left: 2px solid var(--ink); }
-  .feed { padding: 18px; display: grid; gap: 16px; min-height: 380px; max-height: 520px; overflow-y: auto; align-content: start; }
+  .pick button { text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px 18px; cursor: pointer; transition: transform .2s var(--ease-out), border-color .2s, background .2s; }
+  .pick button:hover { transform: translateY(-2px); border-color: var(--ink); }
+  .pick button b { display: block; font: 600 1.05rem "Inter Tight", sans-serif; }
+  .pick button span { color: var(--ink-soft); font-size: .9rem; }
+  .pick button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .pick button[aria-pressed="true"] span { color: #B9BDD0; }
+  .stage { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: .93rem; }
+  .stage li { padding: 7px 12px; border-radius: 10px; color: var(--ink-soft); }
+  .stage li.on { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: inset 3px 0 0 var(--cobalt); }
+  .note { font-size: .86rem; color: var(--ink-soft); }
+  .live { background: linear-gradient(150deg, var(--cobalt) 0%, var(--cobalt-deep) 100%); color: #fff; border-radius: 18px; padding: 20px; display: grid; gap: 10px; }
+  .live b { font: 600 1.1rem "Inter Tight", sans-serif; }
+  .live p { font-size: .9rem; color: #D5DAFF; }
+  .live .btn { justify-content: center; background: #fff; color: var(--ink); }
+  .live .btn:hover { background: var(--ink); color: #fff; box-shadow: none; }
+  .tabs { display: flex; padding: 6px; gap: 6px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+  .tabs span { flex: 1; padding: 10px 14px; font-weight: 500; font-size: .92rem; color: var(--ink-soft); border-radius: 12px; transition: background .3s, color .3s; text-align: center; }
+  .tabs span.on { background: var(--ink); color: #fff; }
+  .feed { padding: 20px; display: grid; gap: 16px; min-height: 380px; max-height: 520px; overflow-y: auto; align-content: start; }
   .feed .msg { animation-delay: 0s; }
-  .feed .room-tag { font-size: .8rem; color: var(--sage); font-weight: 700; margin-left: 6px; }
+  .feed .room-tag { font: 500 .66rem "IBM Plex Mono", monospace; letter-spacing: .05em; color: var(--cobalt); margin-left: 8px; text-transform: uppercase; }
   .feed .body p + p { margin-top: 6px; }
   .feed .body ul { margin: 6px 0 0; padding-left: 1.2em; }
   .feed .score { grid-template-columns: 1fr auto; margin-bottom: 10px; max-width: 460px; }
   .feed .empty { color: var(--ink-soft); text-align: center; align-self: center; padding: 60px 20px; }
-  .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px 18px; border-top: 2px solid var(--ink); background: var(--ground); }
-  .controls button { font: 700 1rem "Atkinson Hyperlegible", sans-serif; padding: 11px 20px; border-radius: 999px; border: 2px solid var(--ink); cursor: pointer; }
-  .controls .go { background: var(--ink); color: var(--paper); }
-  .controls .go:hover { background: var(--sage); border-color: var(--sage); }
-  .controls .go:disabled { opacity: .45; cursor: default; background: var(--ink); border-color: var(--ink); }
-  .controls .again { background: var(--paper); color: var(--ink); }
-  .controls .count { margin-left: auto; color: var(--ink-soft); font-size: .92rem; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px 18px; border-top: 1px solid var(--border); background: var(--surface-2); }
+  .controls button { font: 500 .98rem "Inter", sans-serif; padding: 11px 20px; border-radius: 999px; border: 1px solid var(--border); cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+  .controls .go { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .controls .go:hover { background: var(--cobalt); border-color: var(--cobalt); }
+  .controls .go:disabled { opacity: .4; cursor: default; background: var(--ink); border-color: var(--ink); }
+  .controls .again { background: var(--surface); color: var(--ink); }
+  .controls .again:hover { border-color: var(--ink); }
+  .controls .count { margin-left: auto; color: var(--ink-soft); }
 
+  @media (max-width: 980px) {
+    .fair { grid-template-columns: 1fr 1fr; }
+  }
   @media (max-width: 880px) {
     .demo { grid-template-columns: 1fr; }
     .feed { min-height: 320px; }
-    .tabs span { font-size: .82rem; padding: 10px 12px; }
+    .tabs span { font-size: .8rem; padding: 9px 8px; }
     .stage { display: none; }
     .hero, .sec-head, .use { grid-template-columns: 1fr; }
-    .hero { gap: 40px; padding-bottom: 64px; }
-    .flow { grid-template-columns: 1fr; }
-    .flow li { border-right: 0; border-bottom: 2px solid var(--ink); }
-    .flow li:last-child { border-bottom: 0; }
+    .hero { gap: 76px; padding: 32px 0 56px; }
+    .hero-visual { margin: 40px 10px 0 0; }
+    .tilt { --rx: 5deg; --ry: -9deg; }
+    .room.ghost { left: 36px; right: -14px; top: -40px; }
+    .orb { width: 44px; height: 44px; }
+    .orb-a { left: 8px; top: -36px; }
+    .orb-i { right: -12px; }
     .fair { grid-template-columns: 1fr; }
-    .room { box-shadow: 6px 6px 0 var(--ink); }
-    .bar nav a:not(:last-child) { display: none; }
-    section { padding: 64px 0; }
-    .sec-head { gap: 16px; margin-bottom: 32px; }
+    .bar nav a:not(.cta) { display: none; }
+    section { padding: 72px 0; }
+    .band, #how, footer { margin-left: 6px; margin-right: 6px; }
+    .sec-head { gap: 16px; margin-bottom: 36px; }
+    .scrolly { grid-template-columns: 1fr; gap: 0; }
+    .stage3d { order: -1; top: 8px; height: 46vh; min-height: 300px; z-index: 3; }
+    .stage-cap { font-size: .8rem; padding: 7px 12px; }
+    .scene-step { min-height: 64vh; align-items: flex-end; padding: 0 0 6vh; }
+    .step-card { opacity: .6; transform: none; padding: 24px; background: var(--night-2); }
+    .scroll-row { display: none; }
   }
-  @media (max-width: 420px) { .wrap { padding: 0 16px; } }
+  @media (max-width: 420px) { .wrap { padding: 0 18px; } }
   @media (prefers-reduced-motion: reduce) {
-    .msg { animation: none; opacity: 1; transform: none; }
     html { scroll-behavior: auto; }
+    .msg { animation: none; opacity: 1; transform: none; }
+    .cube { animation: none; transform: rotateX(-22deg) rotateY(-35deg); }
+    .orb { animation: none; transform: translateZ(var(--z)); }
+    .tilt, .step-card, .btn, .pick button, .next span, .fair div { transition: none; }
+    .js [data-reveal] { opacity: 1; transform: none; transition: none; }
   }
 </style>
 </head>
 <body>
 
 <header class="wrap bar">
-  <a class="brand" href="#top" aria-label="SkillRoom home"><span class="brand-mark" aria-hidden="true"></span>SkillRoom</a>
+  <a class="brand" href="#top" aria-label="SkillRoom home"><span class="cube" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>SkillRoom</a>
   <nav aria-label="Main">
     <a href="#how">How it works</a>
-    <a href="#demo">Try the demo</a>
+    <a href="#demo">Demo</a>
     <a href="#fair">Fairness</a>
-    <a href="https://github.com/Terhemba10/skillroom">GitHub</a>
+    <a class="cta" href="https://github.com/Terhemba10/skillroom">GitHub</a>
   </nav>
 </header>
 
 <main id="top">
   <div class="wrap hero">
     <div>
-      <h1>Hire graduates on what they can do.</h1>
+      <span class="eyebrow mono">Skills-based graduate hiring</span>
+      <h1>Hire graduates on <em>what they can do.</em></h1>
       <p class="lede">Most first jobs ask for experience a graduate can't have yet. SkillRoom gives them real tasks from your company, a short interview about their answers, and gives you a scored report. You still make the call.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="#demo">Try the demo</a>
+        <a class="btn btn-primary" href="#demo">Try the demo <span class="arr" aria-hidden="true">&rarr;</span></a>
         <a class="btn btn-ghost" href="https://github.com/Terhemba10/skillroom">View the code</a>
       </div>
     </div>
 
-    <figure class="room" aria-label="Example conversation in a SkillRoom chat room" style="margin:0">
-      <div class="room-head"><span class="hash">#</span>skillroom-interview <span class="who">3 agents, 2 people</span></div>
-      <div class="msgs">
-        <div class="msg">
-          <div class="av av-a" aria-hidden="true">As</div>
-          <div><div class="name">Assessor <small>agent</small></div>
-            <div class="body">Task 2 of 3. You have 8 minutes.
-              <div class="task">A client asks you to pay invoice SUB-8812 for QAR 7,450 today and send the confirmation to a personal Gmail.</div>
-            </div></div>
+    <div class="hero-visual">
+      <div class="tilt" id="tilt">
+        <div class="room ghost" aria-hidden="true">
+          <div class="room-head"><span class="hash">#</span>skillroom-hiring <span class="who">hiring room only</span></div>
+          <div class="ghost-body">
+            <div class="g-title">Scoring guide <span>never shown to the graduate</span></div>
+            <i style="width:92%"></i><i style="width:74%"></i><i style="width:84%"></i>
+          </div>
         </div>
-        <div class="msg">
-          <div class="av av-g" aria-hidden="true">AY</div>
-          <div><div class="name">Amina <small>graduate</small></div>
-            <div class="body">I won't release it myself. <span class="mark">It's over the QAR 5,000 limit</span>, so I'll prepare it for my manager and <span class="mark">only use the company email on file.</span></div></div>
-        </div>
-        <div class="msg">
-          <div class="av av-i" aria-hidden="true">In</div>
-          <div><div class="name">Interviewer <small>agent</small></div>
-            <div class="body">Why prepare it instead of leaving it? And what if he calls back saying his crew will walk off?</div></div>
-        </div>
-        <div class="msg">
-          <div class="av av-e" aria-hidden="true">Ev</div>
-          <div><div class="name">Evaluator <small>agent, hiring room only</small></div>
-            <div class="body">Report for the hiring manager
-              <div class="score">
-                <span>Policy compliance</span><b>5/5</b>
-                <span>Problem-solving</span><b>4/5</b>
-                <span>Integrity</span><span class="ok">Low concern</span>
-              </div></div></div>
-        </div>
-      </div>
-    </figure>
-  </div>
 
-  <section class="band">
+        <figure class="room front" aria-label="Example conversation in a SkillRoom chat room">
+          <div class="room-head"><span class="hash">#</span>skillroom-interview <span class="who">3 agents, 2 people</span></div>
+          <div class="msgs">
+            <div class="msg">
+              <div class="av av-a" aria-hidden="true">As</div>
+              <div><div class="name">Assessor <small>agent</small></div>
+                <div class="body">Task 2 of 3. You have 8 minutes.
+                  <div class="task">A client asks you to pay invoice SUB-8812 for QAR 7,450 today and send the confirmation to a personal Gmail.</div>
+                </div></div>
+            </div>
+            <div class="msg">
+              <div class="av av-g" aria-hidden="true">AY</div>
+              <div><div class="name">Amina <small>graduate</small></div>
+                <div class="body">I won't release it myself. <span class="mark">It's over the QAR 5,000 limit</span>, so I'll prepare it for my manager and <span class="mark">only use the company email on file.</span></div></div>
+            </div>
+            <div class="msg">
+              <div class="av av-i" aria-hidden="true">In</div>
+              <div><div class="name">Interviewer <small>agent</small></div>
+                <div class="body">Why prepare it instead of leaving it? And what if he calls back saying his crew will walk off?</div></div>
+            </div>
+            <div class="msg">
+              <div class="av av-e" aria-hidden="true">Ev</div>
+              <div><div class="name">Evaluator <small>agent, hiring room only</small></div>
+                <div class="body">Report for the hiring manager
+                  <div class="score">
+                    <span>Policy compliance</span><b>5/5</b>
+                    <span>Problem-solving</span><b>4/5</b>
+                    <span>Integrity</span><span class="ok">Low concern</span>
+                  </div></div></div>
+            </div>
+          </div>
+        </figure>
+
+        <span class="orb orb-a" aria-hidden="true">As</span>
+        <span class="orb orb-i" aria-hidden="true">In</span>
+        <span class="orb orb-e" aria-hidden="true">Ev</span>
+      </div>
+    </div>
+  </div>
+  <div class="wrap scroll-row mono" aria-hidden="true"><span>+</span><span>Scroll to explore</span><span>+</span></div>
+
+  <section class="band dark">
+    <div class="band-glow" aria-hidden="true"></div>
     <div class="wrap">
-      <p class="quote">"We need two years of experience" stops capable graduates before anyone sees their work.</p>
-      <p>A CV shows where someone studied. It doesn't show whether they can calm an angry customer, catch a payment over the limit, or reconcile a bank statement. SkillRoom tests exactly that, using your company's own activities and rules.</p>
+      <span class="eyebrow mono" data-reveal>The problem</span>
+      <p class="quote" data-reveal>"We need two years of experience" stops <span>capable graduates</span> before anyone sees their work.</p>
+      <p data-reveal style="--d:.12s">A CV shows where someone studied. It doesn't show whether they can calm an angry customer, catch a payment over the limit, or reconcile a bank statement. SkillRoom tests exactly that, using your company's own activities and rules.</p>
     </div>
   </section>
 
-  <section id="how">
+  <section id="how" class="dark">
     <div class="wrap">
-      <div class="sec-head">
-        <h2>Three agents, one hiring manager, one graduate.</h2>
-        <p>Everything happens in team chat, connected through <a href="https://github.com/sandbox-quantum/switch">Switch</a>. Two linked rooms keep the scoring guide away from the candidate.</p>
+      <div class="sec-head" data-reveal>
+        <div>
+          <span class="eyebrow mono">01 &middot; How it works</span>
+          <h2>Three agents, one hiring manager, one graduate.</h2>
+        </div>
+        <p>Everything happens in team chat, connected through <a href="https://github.com/sandbox-quantum/switch">Switch</a>. Two linked rooms keep the scoring guide away from the candidate. Scroll to watch a session play out.</p>
       </div>
-      <ol class="flow">
-        <li>
-          <span class="step-n" aria-hidden="true">1</span>
-          <h3>Assessor writes the test</h3>
-          <p>The hiring manager posts the role, the company and its policies. The Assessor drafts 3 timed tasks set inside that company, plus a scoring guide. Nothing reaches the graduate until the manager approves.</p>
-          <p class="where">Hiring room, then interview room</p>
-        </li>
-        <li>
-          <span class="step-n" aria-hidden="true">2</span>
-          <h3>Interviewer asks about their answers</h3>
-          <p>A live text interview of about 6 questions. It starts with the graduate's own written answers, then new scenarios, with one follow-up when an answer is vague.</p>
-          <p class="where">Interview room</p>
-        </li>
-        <li>
-          <span class="step-n" aria-hidden="true">3</span>
-          <h3>Evaluator scores, the human decides</h3>
-          <p>Scores for job knowledge, problem-solving, communication and policy compliance, each with evidence. Plus timing, integrity notes and a suggested next step.</p>
-          <p class="where">Hiring room only</p>
-        </li>
-      </ol>
+      <div class="scrolly" id="how-scrolly">
+        <ol class="scene-steps">
+          <li class="scene-step on" data-step="0">
+            <div class="step-card">
+              <span class="step-n mono" aria-hidden="true">Step 01</span>
+              <h3>Assessor writes the test</h3>
+              <p>The hiring manager posts the role, the company and its policies. The Assessor drafts 3 timed tasks set inside that company, plus a scoring guide. Nothing reaches the graduate until the manager approves.</p>
+              <p class="where mono">Hiring room, then interview room</p>
+            </div>
+          </li>
+          <li class="scene-step" data-step="1">
+            <div class="step-card">
+              <span class="step-n mono" aria-hidden="true">Step 02</span>
+              <h3>Interviewer asks about their answers</h3>
+              <p>A live text interview of about 6 questions. It starts with the graduate's own written answers, then new scenarios, with one follow-up when an answer is vague.</p>
+              <p class="where mono">Interview room</p>
+            </div>
+          </li>
+          <li class="scene-step" data-step="2">
+            <div class="step-card">
+              <span class="step-n mono" aria-hidden="true">Step 03</span>
+              <h3>Evaluator scores, the human decides</h3>
+              <p>Scores for job knowledge, problem-solving, communication and policy compliance, each with evidence. Plus timing, integrity notes and a suggested next step.</p>
+              <p class="where mono">Hiring room only</p>
+            </div>
+          </li>
+        </ol>
+        <div class="stage3d" id="stage3d" aria-hidden="true">
+          <canvas id="scene"></canvas>
+          <div class="lbls" id="lbls"></div>
+          <div class="stage-cap" id="stage-cap"><b>Step 01</b>The Assessor writes the test</div>
+          <div class="stage-hint mono">Scroll to play the session</div>
+          <div class="stage-bar"><span id="stage-bar"></span></div>
+        </div>
+      </div>
     </div>
   </section>
 
   <section id="demo">
     <div class="wrap">
-      <div class="sec-head">
-        <h2>Try the demo</h2>
+      <div class="sec-head" data-reveal>
+        <div>
+          <span class="eyebrow mono">02 &middot; Try the demo</span>
+          <h2>Watch a full session.</h2>
+        </div>
         <p>Pick a job and step through a full SkillRoom session, from the job post to the final report. SkillRoom runs inside team chat through Switch; this page replays an example session so you can see it without installing anything.</p>
       </div>
-      <div class="demo">
+      <div class="demo" data-reveal style="--d:.1s">
         <div class="demo-side">
           <div class="pick" role="group" aria-label="Choose a job">
             <button type="button" data-job="books" aria-pressed="true"><b>Junior Accountant</b><span>BrightBooks Accounting</span></button>
@@ -291,7 +471,7 @@
           <div class="live">
             <b>Want to take one yourself?</b>
             <p>SkillRoom Live writes real tasks for any job you describe, times you, interviews you about your answers and scores you. It runs on claude.ai with your own Claude account.</p>
-            <a class="btn btn-primary" href="https://claude.ai/artifact/F5bEgcCasC4rRUvf64RmFv">Take a live assessment</a>
+            <a class="btn" href="https://claude.ai/artifact/F5bEgcCasC4rRUvf64RmFv">Take a live assessment</a>
           </div>
         </div>
         <div class="room">
@@ -300,7 +480,7 @@
           <div class="controls">
             <button type="button" class="go" id="next">Start the session</button>
             <button type="button" class="again" id="again">Restart</button>
-            <span class="count" id="count"></span>
+            <span class="count mono" id="count"></span>
           </div>
         </div>
       </div>
@@ -309,29 +489,36 @@
 
   <section id="fair">
     <div class="wrap">
-      <div class="sec-head">
-        <h2>Fair by design. Cheating made pointless.</h2>
+      <div class="sec-head" data-reveal>
+        <div>
+          <span class="eyebrow mono">03 &middot; Fairness</span>
+          <h2>Fair by design. Cheating made pointless.</h2>
+        </div>
         <p>We don't watch candidates with spyware. We make copying useless and leave every judgement to a person.</p>
       </div>
       <div class="fair">
-        <div><h3>Unique, company-specific tasks</h3><p>Names, amounts and dates change for every graduate, and tasks use your real rules, so there's nothing generic to look up or share.</p></div>
-        <div><h3>The interview checks the written work</h3><p>Graduates explain their own answers. People who didn't write them usually can't.</p></div>
-        <div><h3>Timed tasks</h3><p>Each task has a time limit. Timestamps are recorded and late answers are flagged in the report.</p></div>
-        <div><h3>Warning signs, not accusations</h3><p>Style changes, generic AI-like answers or odd timing are noted as observations with a Low, Some or High concern level for a human to review.</p></div>
-        <div><h3>Substance over polish</h3><p>Spelling and English as a second language don't lower scores unless the job is mainly writing.</p></div>
-        <div><h3>Policies are provided</h3><p>New graduates can't know internal rules yet, so each task includes the guidelines it tests. We measure whether they can read a rule and apply it.</p></div>
+        <div data-reveal><span class="mono">(a)</span><h3>Unique, company-specific tasks</h3><p>Names, amounts and dates change for every graduate, and tasks use your real rules, so there's nothing generic to look up or share.</p></div>
+        <div data-reveal style="--d:.06s"><span class="mono">(b)</span><h3>The interview checks the written work</h3><p>Graduates explain their own answers. People who didn't write them usually can't.</p></div>
+        <div data-reveal style="--d:.12s"><span class="mono">(c)</span><h3>Timed tasks</h3><p>Each task has a time limit. Timestamps are recorded and late answers are flagged in the report.</p></div>
+        <div data-reveal><span class="mono">(d)</span><h3>Warning signs, not accusations</h3><p>Style changes, generic AI-like answers or odd timing are noted as observations with a Low, Some or High concern level for a human to review.</p></div>
+        <div data-reveal style="--d:.06s"><span class="mono">(e)</span><h3>Substance over polish</h3><p>Spelling and English as a second language don't lower scores unless the job is mainly writing.</p></div>
+        <div data-reveal style="--d:.12s"><span class="mono">(f)</span><h3>Policies are provided</h3><p>New graduates can't know internal rules yet, so each task includes the guidelines it tests. We measure whether they can read a rule and apply it.</p></div>
       </div>
     </div>
   </section>
 
   <section id="use">
     <div class="wrap">
-      <div class="sec-head">
-        <h2>How to use it</h2>
+      <div class="sec-head" data-reveal>
+        <div>
+          <span class="eyebrow mono">04 &middot; How to use it</span>
+          <h2>Two roles, a few messages.</h2>
+        </div>
         <p>Always start your message with the agent's name, for example <code>@skillroom-assessor</code>, so it knows the message is for it.</p>
       </div>
       <div class="use">
-        <div class="card">
+        <div class="card inverse" data-reveal>
+          <span class="mono">For the</span>
           <h3>Hiring manager</h3>
           <ol>
             <li>In <b>skillroom-hiring</b>, post the job title, company description, policies for the role and the graduate's name.</li>
@@ -340,7 +527,8 @@
             <li>When the interview ends, read the Evaluator's report and the full transcript, then decide.</li>
           </ol>
         </div>
-        <div class="card">
+        <div class="card" data-reveal style="--d:.12s">
+          <span class="mono">For the</span>
           <h3>Graduate</h3>
           <ol>
             <li>In <b>skillroom-interview</b>, read the honesty statement and reply <code>I agree</code>.</li>
@@ -350,17 +538,20 @@
           </ol>
         </div>
       </div>
-      <p style="margin-top:28px">Want to run it yourself? The setup guide, Switch template and demo companies are in the <a href="https://github.com/Terhemba10/skillroom#run-it-yourself">GitHub README</a>.</p>
+      <p style="margin-top:32px">Want to run it yourself? The setup guide, Switch template and demo companies are in the <a href="https://github.com/Terhemba10/skillroom#run-it-yourself">GitHub README</a>.</p>
     </div>
   </section>
 
   <section>
     <div class="wrap">
-      <div class="sec-head">
-        <h2>What's next</h2>
+      <div class="sec-head" data-reveal>
+        <div>
+          <span class="eyebrow mono">05 &middot; What's next</span>
+          <h2>Where it goes from here.</h2>
+        </div>
         <p>The current version runs on one computer with text interviews. These are the next steps.</p>
       </div>
-      <div class="next">
+      <div class="next" data-reveal>
         <span>Voice and video interviews</span>
         <span>More job families, with expert-reviewed tasks for health, legal and finance</span>
         <span>Comparing several candidates for one role</span>
@@ -372,10 +563,17 @@
   </section>
 </main>
 
-<footer>
+<footer class="dark">
   <div class="wrap">
-    <span>Built by Terhemba Alumo for the Flip the Switch Hackathon, 2026.</span>
-    <span>Made with Switch, Claude Code and Mattermost.</span>
+    <p class="big" data-reveal>Hire on skills,<br><span>not on years.</span></p>
+    <div class="actions">
+      <a class="btn btn-primary" href="https://claude.ai/artifact/F5bEgcCasC4rRUvf64RmFv">Take a live assessment <span class="arr" aria-hidden="true">&rarr;</span></a>
+      <a class="btn btn-ghost" href="https://github.com/Terhemba10/skillroom">View on GitHub</a>
+    </div>
+    <div class="row">
+      <span>Built by Terhemba Alumo for the Flip the Switch Hackathon, 2026.</span>
+      <span>Made with Switch, Claude Code and Mattermost.</span>
+    </div>
   </div>
 </footer>
 
@@ -467,7 +665,7 @@
     setRoom(st.r);
     setStage(st.s);
     i++;
-    count.textContent = i + " of " + steps.length;
+    count.textContent = i + " / " + steps.length;
     if (i >= steps.length) { next.textContent = "Session complete"; next.disabled = true; }
     else { next.textContent = "Next message"; }
   }
@@ -483,6 +681,476 @@
   again.addEventListener("click", reset);
   reset();
 })();
+
+/* Motion: hero tilt, 3D scroll reveal, card tilt */
+(function () {
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+  document.querySelectorAll("[data-reveal]").forEach(function (el) { io.observe(el); });
+
+  if (reduce) return;
+
+  var hero = document.querySelector(".hero");
+  var tilt = document.getElementById("tilt");
+  var base = window.matchMedia("(max-width: 880px)").matches ? [5, -9] : [7, -14];
+  hero.addEventListener("pointermove", function (e) {
+    if (e.pointerType !== "mouse") return;
+    var r = hero.getBoundingClientRect();
+    var x = (e.clientX - r.left) / r.width - 0.5;
+    var y = (e.clientY - r.top) / r.height - 0.5;
+    tilt.style.setProperty("--ry", (base[1] + x * 18) + "deg");
+    tilt.style.setProperty("--rx", (base[0] - y * 12) + "deg");
+  });
+  hero.addEventListener("pointerleave", function () {
+    tilt.style.removeProperty("--ry");
+    tilt.style.removeProperty("--rx");
+  });
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      tilt.style.setProperty("--sy", Math.min(1, window.scrollY / 700).toFixed(3));
+      ticking = false;
+    });
+  }, { passive: true });
+
+  document.querySelectorAll(".card").forEach(function (c) {
+    c.addEventListener("transitionend", function () { c.classList.add("ready"); }, { once: true });
+    c.addEventListener("pointermove", function (e) {
+      if (e.pointerType !== "mouse" || !c.classList.contains("ready")) return;
+      var r = c.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5;
+      var y = (e.clientY - r.top) / r.height - 0.5;
+      c.style.transform = "perspective(900px) rotateY(" + (x * 7) + "deg) rotateX(" + (-y * 7) + "deg) translateY(-3px)";
+    });
+    c.addEventListener("pointerleave", function () { c.style.transform = ""; });
+  });
+})();
+
+/* If the 3D scene can't load (old browser, no WebGL, offline), show the steps as plain cards. */
+setTimeout(function () {
+  if (!window.__sr3d) document.getElementById("how-scrolly").classList.add("no3d");
+}, 7000);
+</script>
+
+<script type="module">
+import * as THREE from "three";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+
+const scrolly = document.getElementById("how-scrolly");
+const stage = document.getElementById("stage3d");
+const canvas = document.getElementById("scene");
+const lblBox = document.getElementById("lbls");
+const steps = Array.from(document.querySelectorAll(".scene-step"));
+const cap = document.getElementById("stage-cap");
+const bar = document.getElementById("stage-bar");
+const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+} catch (err) {
+  scrolly.classList.add("no3d");
+  throw err;
+}
+window.__sr3d = true;
+scrolly.classList.remove("no3d");
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const COL = {
+  night: 0x0B0D17, slab: 0x1A1E33, edge: 0x3B4372, screen: 0x0F1226,
+  cobalt: 0x2236F0, cobaltLight: 0x8C97FF, cyan: 0x1FA9BE, cyanLight: 0x62D6E6,
+  as: 0x7A5CFA, iv: 0x1FA9BE, ev: 0xF5A524,
+  man: 0xC9CEDC, grad: 0xF4F6FF, doc: 0xFDF3DC, white: 0xFFFFFF
+};
+const CAPS = [
+  ["Step 01", "The Assessor writes the test"],
+  ["Step 02", "The Interviewer asks about the answers"],
+  ["Step 03", "The Evaluator scores, the manager decides"]
+];
+
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const seg = (p, a, b) => clamp((p - a) / (b - a));
+const ease = (t) => t * t * (3 - 2 * t);
+const bump = (p, a, b) => Math.sin(Math.PI * seg(p, a, b));
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+const glossy = (c, o) => new THREE.MeshPhysicalMaterial(Object.assign({ color: c, roughness: 0.22, metalness: 0.05, clearcoat: 1, clearcoatRoughness: 0.12 }, o || {}));
+const matte = (c, o) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.6, metalness: 0.1 }, o || {}));
+function outline(mesh, color) {
+  mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry), new THREE.LineBasicMaterial({ color: color === undefined ? COL.edge : color, transparent: true, opacity: 0.9 })));
+  return mesh;
+}
+function shadowy(o) { o.traverse((m) => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } }); return o; }
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x0E1124, 11, 22);
+const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+
+/* Studio-style reflections for the glossy objects */
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+
+scene.add(new THREE.HemisphereLight(0xBFC6FF, 0x0B0D17, 0.6));
+const sun = new THREE.DirectionalLight(0xffffff, 1.8);
+sun.position.set(3.5, 8, 6);
+sun.castShadow = true;
+sun.shadow.mapSize.set(1024, 1024);
+Object.assign(sun.shadow.camera, { left: -6, right: 6, top: 6, bottom: -6, near: 1, far: 25 });
+sun.shadow.radius = 5;
+scene.add(sun);
+const rim = new THREE.PointLight(COL.cobalt, 30, 14);
+rim.position.set(0, 3.2, -3.2);
+scene.add(rim);
+
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.45 }));
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+const grid = new THREE.GridHelper(40, 80, 0x2A3160, 0x1A1F3D);
+grid.position.y = 0.001;
+grid.material.transparent = true;
+grid.material.opacity = 0.35;
+scene.add(grid);
+
+/* Rooms: a floor slab, two glass walls and a chat screen with message lines */
+function makeRoom(cx, tint, tintLight, sideSign) {
+  const g = new THREE.Group();
+  g.position.set(cx, 0, 0);
+  scene.add(g);
+  const W = 2.5, D = 2, H = 1.45;
+  const slab = outline(new THREE.Mesh(new THREE.BoxGeometry(W, 0.16, D), glossy(COL.slab, { roughness: 0.35, clearcoat: 0.6 })), tintLight);
+  slab.position.y = 0.08;
+  g.add(slab);
+  const glass = new THREE.MeshPhysicalMaterial({ color: tint, transparent: true, opacity: 0.16, roughness: 0.05, metalness: 0, side: THREE.DoubleSide, depthWrite: false });
+  const back = outline(new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.04), glass), tintLight);
+  back.position.set(0, 0.16 + H / 2, -D / 2 + 0.02);
+  g.add(back);
+  const side = outline(new THREE.Mesh(new THREE.BoxGeometry(0.04, H, D), glass), tintLight);
+  side.position.set(sideSign * (W / 2 - 0.02), 0.16 + H / 2, 0);
+  g.add(side);
+  const screen = outline(new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.92, 0.06), matte(COL.screen, { roughness: 0.3 })));
+  screen.position.set(0, 0.98, -D / 2 + 0.12);
+  g.add(screen);
+  const head = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.12, 0.07), matte(tint, { emissive: tint, emissiveIntensity: 0.6 }));
+  head.position.set(0, 1.38, -D / 2 + 0.12);
+  g.add(head);
+  const lines = [];
+  for (let i = 0; i < 5; i++) {
+    const geo = new THREE.BoxGeometry(1.2, 0.07, 0.03);
+    geo.translate(0.6, 0, 0);
+    const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0x333a66, emissive: 0x333a66, emissiveIntensity: 0.9, roughness: 0.4 }));
+    m.position.set(-0.62, 1.24 - i * 0.14, -D / 2 + 0.165);
+    m.scale.x = 0.001;
+    g.add(m);
+    lines.push(m);
+  }
+  shadowy(g);
+  slab.castShadow = false;
+  back.castShadow = side.castShadow = false;
+  return { g, lines };
+}
+const hiring = makeRoom(-1.75, COL.cobalt, COL.cobaltLight, -1);
+const interview = makeRoom(1.75, COL.cyan, COL.cyanLight, 1);
+
+function person(color, x, z) {
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.16, 0.3, 8, 20), glossy(color));
+  body.position.y = 0.47;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.13, 32, 20), glossy(color));
+  head.position.y = 0.92;
+  g.add(body, head);
+  g.position.set(x, 0, z);
+  scene.add(shadowy(g));
+  return g;
+}
+const manager = person(COL.man, -2.25, 0.35);
+const graduate = person(COL.grad, 1.3, 0.35);
+
+function agent(color) {
+  const g = new THREE.Group();
+  const core = new THREE.Mesh(new THREE.IcosahedronGeometry(0.2, 0), glossy(color, { flatShading: true, emissive: color, emissiveIntensity: 0.18 }));
+  core.castShadow = true;
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.012, 8, 64), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.7 }));
+  ring.rotation.x = Math.PI / 2;
+  const glow = new THREE.PointLight(color, 1.2, 1.6);
+  g.add(core, ring, glow);
+  scene.add(g);
+  return { g, core, ring, glow };
+}
+const assessor = agent(COL.as);
+const interviewer = agent(COL.iv);
+const evaluator = agent(COL.ev);
+
+/* The link between the two rooms, with message packets travelling along it */
+const linkCurve = new THREE.QuadraticBezierCurve3(V(-0.9, 1.5, 0.2), V(0, 2.4, 0.4), V(0.9, 1.5, 0.2));
+const tube = new THREE.Mesh(new THREE.TubeGeometry(linkCurve, 64, 0.028, 12, false), new THREE.MeshStandardMaterial({ color: COL.cobalt, emissive: COL.cobalt, emissiveIntensity: 1.4, roughness: 0.3 }));
+scene.add(tube);
+[0, 1].forEach((t) => {
+  const s = new THREE.Mesh(new THREE.SphereGeometry(0.06, 20, 14), glossy(COL.cobaltLight, { emissive: COL.cobalt, emissiveIntensity: 0.8 }));
+  s.position.copy(linkCurve.getPoint(t));
+  scene.add(s);
+});
+const packets = [];
+for (let k = 0; k < 7; k++) {
+  const s = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 12), new THREE.MeshBasicMaterial({ color: COL.white }));
+  s.scale.setScalar(0.001);
+  scene.add(s);
+  packets.push(s);
+}
+
+/* Documents: the scoring guide (never leaves the hiring room) and the final report */
+function doc(w, h, color, bars) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.03), glossy(color, { roughness: 0.4, clearcoat: 0.4 }));
+  bars.forEach((b, i) => {
+    const bm = new THREE.Mesh(new THREE.BoxGeometry(w * b[0], 0.04, 0.012), matte(b[1], { emissive: b[1], emissiveIntensity: 0.15 }));
+    bm.position.set(-w * (1 - b[0]) / 2 + 0.06 * (1 - b[0]), h / 2 - 0.12 - i * 0.1, 0.02);
+    m.add(bm);
+  });
+  m.castShadow = true;
+  scene.add(m);
+  return m;
+}
+const guide = doc(0.46, 0.6, COL.doc, [[0.7, 0x0B0D17], [0.55, 0x0B0D17], [0.62, 0x0B0D17], [0.4, COL.ev]]);
+guide.position.set(-1.0, 0.55, 0.6);
+guide.rotation.set(-0.2, -0.45, 0);
+const report = doc(0.62, 0.8, COL.white, [[0.75, 0x0B0D17], [0.6, COL.ev], [0.7, COL.ev], [0.55, COL.ev], [0.65, COL.cobalt]]);
+
+/* Floating HTML labels that follow objects in the scene */
+const labels = [];
+function label(html, cls, getPos, getVis) {
+  const el = document.createElement("span");
+  el.className = "lbl " + (cls || "");
+  el.innerHTML = html;
+  lblBox.appendChild(el);
+  labels.push({ el, getPos, getVis: getVis || (() => 1) });
+}
+const dot = (c) => '<i style="background:#' + c.toString(16).padStart(6, "0") + '"></i>';
+const up = (o, y) => () => o.position.clone().add(V(0, y, 0));
+label("#skillroom-hiring", "room-l", () => V(-1.75, 0.02, 1.15));
+label("#skillroom-interview", "room-l alt", () => V(1.75, 0.02, 1.15));
+label(dot(COL.as) + "Assessor", "", up(assessor.g, 0.45));
+label(dot(COL.iv) + "Interviewer", "", up(interviewer.g, 0.45));
+label(dot(COL.ev) + "Evaluator", "", up(evaluator.g, 0.45));
+label("Hiring manager", "person", up(manager, 1.22));
+label("Graduate", "person", up(graduate, 1.22));
+label("Scoring guide &middot; stays here", "doc", up(guide, 0.45), () => guide.scale.x);
+label("Report &rarr; manager", "doc", up(report, 0.6), () => (report.scale.x > 0.9 ? 1 : 0));
+
+/* Where each agent hovers */
+const HIRE_A = V(-1.35, 1.72, 0.5), INT_A = V(1.95, 1.72, 0.55), INT_A_SIDE = V(2.45, 1.95, -0.35);
+const HIRE_I = V(-2.5, 1.55, 0.3), INT_I = V(2.35, 1.5, 0.5), HIRE_I2 = V(-2.55, 1.6, 0.6);
+function fly(a, b, t) {
+  const m = a.clone().add(b).multiplyScalar(0.5);
+  m.y += 1.1; m.z += 0.5;
+  const u = 1 - t;
+  return V(u * u * a.x + 2 * u * t * m.x + t * t * b.x, u * u * a.y + 2 * u * t * m.y + t * t * b.y, u * u * a.z + 2 * u * t * m.z + t * t * b.z);
+}
+
+const cAs = new THREE.Color(COL.as), cIv = new THREE.Color(COL.iv), cGr = new THREE.Color(0xDDE3FF);
+const cOk = new THREE.Color(COL.cobaltLight), cEv = new THREE.Color(COL.ev), cCyan = new THREE.Color(COL.cyanLight);
+const DRAFT_W = [0.9, 0.7, 0.85, 0.6, 0.75];
+const SCORE_W = [0.8, 1.0, 0.8, 1.0, 0.5];
+const INT_W = [0.85, 0.6, 0.9, 0.55, 0.8];
+function paint(m, c) { m.material.color.copy(c); m.material.emissive.copy(c); }
+
+function update(p, t) {
+  const bob = (k) => (reduce ? 0 : Math.sin(t * 1.6 + k) * 0.06);
+  const active = p < 1 ? 0 : p < 2 ? 1 : 2;
+
+  // Assessor: drafts in the hiring room, flies to the interview room after APPROVE
+  const f1 = ease(seg(p, 0.6, 1.0));
+  let a;
+  if (f1 <= 0) a = HIRE_A.clone();
+  else if (f1 < 1) a = fly(HIRE_A, INT_A, f1);
+  else a = INT_A.clone().lerp(INT_A_SIDE, ease(seg(p, 1.3, 1.6)));
+  a.y += bob(0);
+  assessor.g.position.copy(a);
+
+  // Interviewer: joins the interview room, then reports back to the hiring room
+  const g1 = ease(seg(p, 1.05, 1.45)), g2 = ease(seg(p, 2.0, 2.45));
+  let iv;
+  if (g1 <= 0) iv = HIRE_I.clone();
+  else if (g1 < 1) iv = fly(HIRE_I, INT_I, g1);
+  else if (g2 <= 0) iv = INT_I.clone();
+  else if (g2 < 1) iv = fly(INT_I, HIRE_I2, g2);
+  else iv = HIRE_I2.clone();
+  iv.y += bob(2);
+  interviewer.g.position.copy(iv);
+
+  // Evaluator: only ever circles the hiring room
+  const ang = reduce ? 0.9 : t * (active === 2 ? 1.2 : 0.5);
+  evaluator.g.position.set(-1.75 + Math.cos(ang) * 0.75, 1.95 + bob(4), -0.15 + Math.sin(ang) * 0.45);
+
+  [assessor, interviewer, evaluator].forEach((ag, k) => {
+    ag.core.rotation.y = t * 0.9 + k;
+    ag.core.rotation.x = t * 0.4 + k;
+    const on = k === active ? 1 : 0;
+    const pulse = reduce ? 0.5 : 0.5 + 0.5 * Math.sin(t * 4 + k);
+    ag.ring.scale.setScalar(1 + on * 0.3 * pulse);
+    ag.ring.material.opacity = 0.2 + on * 0.65;
+    ag.ring.rotation.z = t * 0.6;
+    ag.glow.intensity = 0.4 + on * 2.2;
+  });
+
+  // People react: the manager approves, the graduate answers
+  manager.position.y = bump(p, 0.45, 0.62) * 0.14 + bump(p, 2.75, 3.0) * 0.1;
+  graduate.position.y = (bump(p, 1.2, 1.35) + bump(p, 1.56, 1.71) + bump(p, 1.92, 2.07)) * 0.08;
+
+  // Hiring room screen: draft lines, turning blue on APPROVE, then the score bars
+  hiring.lines.forEach((m, i) => {
+    let w, c;
+    if (p < 2.3) {
+      w = DRAFT_W[i] * ease(seg(p, 0.05 + i * 0.08, 0.2 + i * 0.08));
+      c = cAs.clone().lerp(cOk, seg(p, 0.45, 0.6));
+    } else if (p < 2.45) {
+      w = DRAFT_W[i] * (1 - seg(p, 2.3, 2.45));
+      c = cOk;
+    } else {
+      w = SCORE_W[i] * ease(seg(p, 2.5 + i * 0.08, 2.65 + i * 0.08));
+      c = i < 4 ? cEv : cOk;
+    }
+    m.scale.x = Math.max(0.001, w);
+    paint(m, c);
+  });
+
+  // Interview room screen: the task, then answers and questions alternating
+  interview.lines.forEach((m, i) => {
+    const w = i === 0 ? ease(seg(p, 0.85, 1.0)) : ease(seg(p, 1.1 + i * 0.18, 1.25 + i * 0.18));
+    m.scale.x = Math.max(0.001, INT_W[i] * w);
+    paint(m, i === 0 ? cAs : i % 2 ? cGr : cCyan);
+  });
+
+  // Packets: tasks go hiring -> interview, the transcript comes back
+  const fwd = bump(p, 0.6, 1.05), back = bump(p, 2.0, 2.5);
+  const s = Math.max(fwd, back);
+  packets.forEach((pk, k) => {
+    const base = ((reduce ? 0 : t * 0.45) + k / packets.length) % 1;
+    pk.position.copy(linkCurve.getPoint(fwd >= back ? base : 1 - base));
+    pk.scale.setScalar(Math.max(0.001, s));
+  });
+  tube.material.emissiveIntensity = 0.9 + s * 1.6;
+
+  // Scoring guide appears with the draft and never moves
+  guide.scale.setScalar(Math.max(0.001, ease(seg(p, 0.15, 0.4))));
+  guide.position.y = 0.55 + bob(1) * 0.5;
+
+  // Report rises out of the hiring room at the end
+  const r = ease(seg(p, 2.45, 2.9));
+  report.scale.setScalar(Math.max(0.001, r));
+  report.position.set(-1.75, 0.3 + r * 1.9 + bob(3) * r, 0.3 + r * 0.35);
+  report.rotation.set(-0.1, (1 - r) * Math.PI * 1.5 + (reduce ? 0 : Math.sin(t * 0.8) * 0.15), 0);
+}
+
+/* Camera keyframes, one per step boundary */
+const KP = [V(-2.1, 3.3, 7.4), V(1.7, 3.1, 7.2), V(1.2, 3.5, 7.6), V(-1.5, 3.7, 7.2)];
+const KT = [V(-1.3, 1.25, 0), V(1.1, 1.25, 0), V(0.9, 1.3, 0), V(-1.3, 1.5, 0)];
+function camAt(p) {
+  const k = Math.min(2, Math.floor(p));
+  const f = ease(clamp(p - k));
+  return [KP[k].clone().lerp(KP[k + 1], f), KT[k].clone().lerp(KT[k + 1], f)];
+}
+
+let w = 1, h = 1;
+function resize() {
+  const r = stage.getBoundingClientRect();
+  w = Math.max(1, r.width);
+  h = Math.max(1, r.height);
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stage);
+resize();
+
+let px = 0, py = 0, pxS = 0, pyS = 0;
+if (!reduce) {
+  stage.addEventListener("pointermove", (e) => {
+    const r = stage.getBoundingClientRect();
+    px = ((e.clientX - r.left) / r.width) * 2 - 1;
+    py = ((e.clientY - r.top) / r.height) * 2 - 1;
+  });
+  stage.addEventListener("pointerleave", () => { px = 0; py = 0; });
+}
+
+function progress() {
+  const r0 = steps[0].getBoundingClientRect();
+  const r2 = steps[steps.length - 1].getBoundingClientRect();
+  // Reach the end of the story while the last step is still mid-screen, before the stage unsticks
+  const total = Math.max(1, r2.top + r2.height * 0.45 - r0.top);
+  return clamp(((window.innerHeight * 0.6 - r0.top) / total) * 3, 0, 3);
+}
+
+const tmp = new THREE.Vector3();
+function placeLabels() {
+  for (const L of labels) {
+    tmp.copy(L.getPos()).project(camera);
+    const x = (tmp.x * 0.5 + 0.5) * w;
+    const y = (-tmp.y * 0.5 + 0.5) * h;
+    const vis = L.getVis();
+    L.el.style.transform = "translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px) translate(-50%,-50%)";
+    L.el.style.opacity = tmp.z < 1 && vis > 0.05 ? Math.min(1, vis).toFixed(2) : "0";
+  }
+}
+
+let lastActive = -1;
+function updateUI(pT) {
+  const active = Math.min(2, Math.floor(pT));
+  if (active !== lastActive) {
+    steps.forEach((s, i) => s.classList.toggle("on", i === active));
+    cap.innerHTML = "<b>" + CAPS[active][0] + "</b>" + CAPS[active][1];
+    lastActive = active;
+  }
+  bar.style.width = ((pT / 3) * 100).toFixed(1) + "%";
+  stage.classList.toggle("started", pT > 0.06);
+}
+
+let pS = 0, t = 0, last = performance.now(), running = false;
+function render() {
+  const pT = progress();
+  pS = reduce ? Math.min(3, Math.floor(pT) + 1) : pS;
+  update(pS, t);
+  const [cp, ct] = camAt(pS);
+  const fit = Math.max(1, 1.15 / camera.aspect);
+  const off = cp.clone().sub(ct).multiplyScalar(fit);
+  camera.position.copy(ct).add(off).add(V(pxS * 0.6, -pyS * 0.35, 0));
+  camera.lookAt(ct);
+  renderer.render(scene, camera);
+  placeLabels();
+  updateUI(pT);
+  return pT;
+}
+function frame(now) {
+  if (!running) return;
+  requestAnimationFrame(frame);
+  const dt = Math.min(0.05, (now - last) / 1000);
+  last = now;
+  if (!reduce) {
+    t += dt;
+    const pT = progress();
+    pS += (pT - pS) * Math.min(1, dt * 4);
+    pxS += (px - pxS) * Math.min(1, dt * 3);
+    pyS += (py - pyS) * Math.min(1, dt * 3);
+  }
+  render();
+}
+pS = reduce ? 0 : progress();
+render();
+new IntersectionObserver((entries) => {
+  const vis = entries[0].isIntersecting;
+  if (vis && !running) { running = true; last = performance.now(); requestAnimationFrame(frame); }
+  else if (!vis) running = false;
+}).observe(stage);
 </script>
 
 </body>
