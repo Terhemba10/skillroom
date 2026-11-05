@@ -129,6 +129,10 @@ If Switch Console won't create agents from the template (on Windows it currently
 3. In each room, post the room's `kickoff:` message from the template so the agents introduce themselves.
 4. Continue from step 4 of **Run it yourself** above.
 
+## Example run
+
+[`examples/brightbooks-run.md`](examples/brightbooks-run.md) is a real test run copied from Mattermost: the manager's setup, the Assessor's draft and scoring guide, APPROVE, three timed tasks with timestamps, and the start of the live interview. It also says honestly where that run stopped (the Evaluator's machine went offline) and what we changed because of it. The candidate is fictional; an AI wrote her answers to test the workflow.
+
 ## Demo companies (fictional)
 
 - **BrightBooks Accounting:** Junior Accountant
