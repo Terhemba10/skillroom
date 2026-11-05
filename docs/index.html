@@ -499,7 +499,7 @@
       <div class="fair">
         <div data-reveal><span class="mono">(a)</span><h3>Unique, company-specific tasks</h3><p>Names, amounts and dates change for every graduate, and tasks use your real rules, so there's nothing generic to look up or share.</p></div>
         <div data-reveal style="--d:.06s"><span class="mono">(b)</span><h3>The interview checks the written work</h3><p>Graduates explain their own answers. People who didn't write them usually can't.</p></div>
-        <div data-reveal style="--d:.12s"><span class="mono">(c)</span><h3>Timed tasks</h3><p>Each task has a time limit. Timestamps are recorded and late answers are flagged in the report.</p></div>
+        <div data-reveal style="--d:.12s"><span class="mono">(c)</span><h3>Timed tasks</h3><p>Each task has a time limit. Chat timestamps are recorded and late answers are flagged in the report, but timing never lowers a score.</p></div>
         <div data-reveal><span class="mono">(d)</span><h3>Warning signs, not accusations</h3><p>Style changes, generic AI-like answers or odd timing are noted as observations with a Low, Some or High concern level for a human to review.</p></div>
         <div data-reveal style="--d:.06s"><span class="mono">(e)</span><h3>Substance over polish</h3><p>Spelling and English as a second language don't lower scores unless the job is mainly writing.</p></div>
         <div data-reveal style="--d:.12s"><span class="mono">(f)</span><h3>Policies are provided</h3><p>New graduates can't know internal rules yet, so each task includes the guidelines it tests. We measure whether they can read a rule and apply it.</p></div>
@@ -521,10 +521,11 @@
           <span class="mono">For the</span>
           <h3>Hiring manager</h3>
           <ol>
+            <li>Add the graduate to <b>skillroom-interview</b>. One graduate at a time per interview room.</li>
             <li>In <b>skillroom-hiring</b>, post the job title, company description, policies for the role and the graduate's name.</li>
             <li>Review the 3 timed tasks and scoring guide the Assessor drafts.</li>
             <li>Reply <code>APPROVE</code>, or say what to change.</li>
-            <li>When the interview ends, read the Evaluator's report and the full transcript, then decide.</li>
+            <li>When the interview ends, read the Evaluator's report and the full transcript, then decide. A copy of the report is saved under <code>reports/</code>.</li>
           </ol>
         </div>
         <div class="card" data-reveal style="--d:.12s">

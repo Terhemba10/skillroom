@@ -6,6 +6,16 @@ SkillRoom is a hiring workflow built on [Switch](https://github.com/sandbox-quan
 
 Built for the **Flip the Switch Hackathon** (WeMakeDevs × DevTools Academy), Track 1: Best Business Workflow.
 
+<!--
+DEMO: before submitting, uncomment this block and fill in the links.
+
+## Demo
+
+- **Video (2-3 min):** <YouTube or Loom link>: a full session through Switch, from job post to APPROVE to the graduate's answers, the interview and the report.
+- **Screenshots:** see [`examples/`](examples)
+- **Sample report:** [`examples/<graduate-name>-<role>.md`](examples), copied from the Evaluator's `reports/` folder after a real run.
+-->
+
 ---
 
 ## The problem
@@ -34,7 +44,7 @@ Two linked rooms in team chat:
 3. **Human approves.** Nothing reaches the graduate until the manager replies `APPROVE`.
 4. **Written assessment.** The Assessor gives the graduate the tasks one at a time in the interview room, each with the company guidelines they need.
 5. **Live interview.** The Interviewer asks about the graduate's *own* written answers, then new scenarios, with adaptive follow-ups.
-6. **Scored report.** The Evaluator scores Job knowledge, Problem-solving, Communication and Policy compliance, checks each policy, adds integrity notes, and suggests a next step.
+6. **Scored report.** The Evaluator scores Job knowledge, Problem-solving, Communication and Policy compliance, checks each policy, adds timing and integrity notes, suggests a next step, and saves a copy under `reports/`.
 7. **Human decides.** The manager reads the report and the full transcript, then decides.
 
 ## How Switch is used
@@ -53,7 +63,7 @@ We don't watch graduates with spyware. We make cheating pointless:
 - **Unique tasks:** every graduate gets different names, amounts and situations.
 - **Company-specific:** tasks use the company's own activities and policies, so there is nothing generic to look up.
 - **The interview checks the written work:** graduates explain their own answers; people who didn't write them usually can't.
-- **Time-limited tasks:** each task has a time limit (8–10 minutes). Message timestamps are recorded, and late answers are flagged as LATE in the report (flagged, not blocked).
+- **Time-limited tasks:** each task has a time limit (8–10 minutes). Message timestamps are recorded, and late answers are flagged as LATE in the report (flagged, not blocked). Timing and integrity notes are for the manager to review; they never lower a skill score.
 - **Integrity checks, not accusations:** the Evaluator looks for five warning signs (can't explain own answer, sudden style change, generic AI-like answers that ignore task details, suspicious timing, contradictions between test and interview) and gives a Low / Some / High concern level for a human to review.
 - **Fair scoring:** spelling and English as a second language don't lower scores unless the job is mainly writing; the interviewer never asks about personal characteristics.
 - **The AI advises, the human decides.**
@@ -63,7 +73,7 @@ We don't watch graduates with spyware. We make cheating pointless:
 Built and tested on Windows with Switch Console (early access). What we learned:
 
 - Install the **Claude Code CLI** (`irm https://claude.ai/install.ps1 | iex`), add `%USERPROFILE%\.local\bin` to PATH, and run `claude` once to sign in. Switch needs the CLI, not the desktop app.
-- On Windows, agents run as **managed agents**. The template form currently marks every provider "Not supported here", so we created the three agents with **Your Agents → New agent** using the same instructions as the template.
+- On Windows, agents run as **managed agents**. The template form currently marks every provider "Not supported here", so we created the three agents with **Your Agents → New agent** using the same instructions as the template. See [Manual setup](#manual-setup-if-the-template-wont-import) below.
 - Mattermost needs Docker, and Docker needs a working **WSL 2**. If Docker won't start, run `wsl --update`, then restart.
 - Give each reply 1–3 minutes: the server, Mattermost and several Claude Code sessions share one PC.
 
@@ -78,10 +88,31 @@ Built and tested on Windows with Switch Console (early access). What we learned:
 5. Reply `APPROVE`, then answer the tasks and the interview in **skillroom-interview** as the graduate. (Add a second Mattermost account to the interview room to play the graduate separately.)
 6. Read the report in the hiring room. A copy is saved in the Evaluator's working directory under `reports/`.
 
+Run one graduate at a time per interview room. To assess several at once, import the template again with a different name prefix (for example `skillroom-ada`), so each graduate gets their own rooms.
+
+### Manual setup (if the template won't import)
+
+If Switch Console won't create agents from the template (on Windows it currently marks every provider "Not supported here"), build the same setup by hand. Everything you need is in [`skillroom.template.yaml`](skillroom.template.yaml); replace `{team}` with `skillroom` wherever it appears.
+
+1. In **Your Agents → New agent**, create three agents using Claude Code:
+
+   | Agent name | Who can address it | Instructions |
+   |---|---|---|
+   | `skillroom-assessor` | anyone | the Assessor's `instructions:` block |
+   | `skillroom-interviewer` | anyone | the Interviewer's `instructions:` block |
+   | `skillroom-evaluator` | owner and agents only | the Evaluator's `instructions:` block |
+
+2. Create two rooms connected to Mattermost and add yourself to both:
+   - `skillroom-hiring` with all three agents
+   - `skillroom-interview` with the Assessor and the Interviewer only. Never add the Evaluator here.
+3. In each room, post the room's `kickoff:` message from the template so the agents introduce themselves.
+4. Continue from step 4 of **Run it yourself** above.
+
 ## Demo companies (fictional)
 
 - **BrightBooks Accounting:** Junior Accountant
 - **Swift Parcels:** Operations Assistant
+- **ShopEase Qatar:** Customer Support Agent (the example replayed in "Try the demo" on the website)
 
 Same workflow, completely different tests: SkillRoom adapts to any job.
 
