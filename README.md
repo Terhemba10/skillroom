@@ -162,9 +162,9 @@ They then refresh Mattermost (**F5**) and see the channels.
 
 ## Demo companies (fictional)
 
-- **BrightBooks Accounting:** Junior Accountant
+- **BrightBooks Accounting:** Junior Accountant (replayed in "Try the demo" on the website)
 - **Swift Parcels:** Operations Assistant
-- **ShopEase Qatar:** Customer Support Agent (the example replayed in "Try the demo" on the website)
+- **ShopEase Qatar:** Customer Support Agent (also replayed on the website)
 
 Same workflow, completely different tests: SkillRoom adapts to any job.
 
