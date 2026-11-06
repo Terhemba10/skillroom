@@ -9,7 +9,8 @@ Built for the **Flip the Switch Hackathon** (WeMakeDevs × DevTools Academy), Tr
 ## See it
 
 - **Live site:** https://terhemba10.github.io/skillroom/ shows how it works, with a replay of an example session.
-- **Real run in Mattermost:** [`examples/brightbooks-run.md`](examples/brightbooks-run.md): setup, the Assessor's draft, APPROVE, three timed tasks and the start of the interview.
+- **Full run with the Evaluator's report:** [`examples/brightbooks-full-run-grace.md`](examples/brightbooks-full-run-grace.md): job post, draft, APPROVE, three timed tasks, the six-question interview and the scored report (5/5, with an integrity flag on the AI-written answers).
+- **Earlier partial run:** [`examples/brightbooks-run.md`](examples/brightbooks-run.md): setup, the Assessor's draft, APPROVE, three timed tasks and the start of the interview.
 <!--
 DEMO: before submitting, uncomment these lines and fill them in.
 
@@ -165,6 +166,8 @@ Private channels don't appear in Browse channels. Converting needs channel or sy
 `skillroom-assessor`, `skillroom-interviewer` and `skillroom-evaluator` are **agents, not channels**. They are already members of the rooms. Talk to them by typing `@skillroom-assessor` (and so on) inside a channel.
 
 ## Example run
+
+[`examples/brightbooks-full-run-grace.md`](examples/brightbooks-full-run-grace.md) is a complete run, from the job post to the Evaluator's report. The fictional candidate's answers were written by AI, and the Evaluator flagged exactly that: it rated integrity "Some concern" because the long, polished answers arrived far too fast, while keeping timing out of the skill scores.
 
 [`examples/brightbooks-run.md`](examples/brightbooks-run.md) is a real test run copied from Mattermost: the manager's setup, the Assessor's draft and scoring guide, APPROVE, three timed tasks with timestamps, and the start of the live interview. It also says honestly where that run stopped (the Evaluator's machine went offline) and what we changed because of it. The candidate is fictional; an AI wrote her answers to test the workflow.
 
