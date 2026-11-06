@@ -11,13 +11,12 @@ Built for the **Flip the Switch Hackathon** (WeMakeDevs × DevTools Academy), Tr
 - **Live site:** https://terhemba10.github.io/skillroom/ shows how it works, with a replay of an example session.
 - **Full run with the Evaluator's report:** [`examples/brightbooks-full-run-grace.md`](examples/brightbooks-full-run-grace.md): job post, draft, APPROVE, three timed tasks, the six-question interview and the scored report (5/5, with an integrity flag on the AI-written answers).
 - **Earlier partial run:** [`examples/brightbooks-run.md`](examples/brightbooks-run.md): setup, the Assessor's draft, APPROVE, three timed tasks and the start of the interview.
+
+![Both SkillRoom rooms in Mattermost during the Grace Danjuma run](examples/skillroom-rooms.png)
 <!--
 DEMO: before submitting, uncomment these lines and fill them in.
 
 - **Demo video (2-3 min):** <YouTube or Loom link>: one full session through Switch, from the job post to APPROVE, the graduate's answers, the interview and the Evaluator's report.
-- **Scored report:** [`examples/<graduate-name>-<role>.md`](examples), copied from the Evaluator's `reports/` folder.
-
-![Both SkillRoom rooms in Mattermost](examples/<screenshot-or-gif>.png)
 -->
 
 ### Judge quickstart (Mac / Linux)
