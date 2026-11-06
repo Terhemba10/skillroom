@@ -134,7 +134,7 @@ Then post a short message in each channel and check that the agents still reply.
 
 | Role | Channels | Why |
 |---|---|---|
-| Hiring manager | `skillroom-hiring` and `skillroom-interview` | Sets up the job, approves the test, reads the report, and can watch the interview |
+| Hiring manager | `skillroom-hiring`, and optionally `skillroom-interview` | Sets up the job, approves the test and reads the report in the hiring room. Joining the interview room is optional, to watch the interview live |
 | Graduate | `skillroom-interview` **only** | Must never be in the hiring room, because it shows the scoring guide and the Evaluator |
 
 **How to add someone:** the person creates a Mattermost account on the first screen. The hiring manager opens the channel, clicks the **channel name → Add Members** and adds them. They refresh Mattermost (**F5**) to see it.

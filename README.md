@@ -10,7 +10,7 @@ Built for the **Flip the Switch Hackathon** (WeMakeDevs × DevTools Academy), Tr
 
 [![Watch the SkillRoom demo video on YouTube](https://img.youtube.com/vi/Nie_df-agGQ/hqdefault.jpg)](https://youtu.be/Nie_df-agGQ)
 
-- **Demo video (3:34):** https://youtu.be/Nie_df-agGQ: one full session through Switch, from the job post to APPROVE, the graduate's timed answers, the six-question interview and the Evaluator's report. Narrated, with captions.
+- **Demo video (3:34):** https://youtu.be/Nie_df-agGQ: one full session through Switch, from the job post to APPROVE, the graduate's timed answers, the six-question interview and the Evaluator's report. Narrated, with captions. The report it ends on: [`examples/aisha-bello-junior-accountant-report.md`](examples/aisha-bello-junior-accountant-report.md).
 - **Live site:** https://terhemba10.github.io/skillroom/ shows how it works, with a replay of an example session.
 - **Full run with the Evaluator's report:** [`examples/brightbooks-full-run-grace.md`](examples/brightbooks-full-run-grace.md): job post, draft, APPROVE, three timed tasks, the six-question interview and the scored report (5/5, with an integrity flag on the AI-written answers).
 - **Earlier partial run:** [`examples/brightbooks-run.md`](examples/brightbooks-run.md): setup, the Assessor's draft, APPROVE, three timed tasks and the start of the interview.
@@ -163,7 +163,7 @@ Then add each person to their channel by hand (channel name → **Add members**)
 
 | Role | Channels | Why |
 |---|---|---|
-| Hiring manager | `skillroom-hiring` and `skillroom-interview` | Sets up the job, approves the test, reads the report, and can watch the interview |
+| Hiring manager | `skillroom-hiring`, and optionally `skillroom-interview` | Sets up the job, approves the test and reads the report in the hiring room. Joining the interview room is optional, to watch the interview live; in the [demo video](https://youtu.be/Nie_df-agGQ) the manager stays in the hiring room only |
 | Graduate | `skillroom-interview` **only** | Must never be in the hiring room, because it shows the scoring guide and the Evaluator |
 
 **How to add someone:** the person creates a Mattermost account on the first screen. The hiring manager then opens the channel, clicks the **channel name → Add Members**, and adds them. They refresh Mattermost (**F5**) to see it. Graduates are never added to `skillroom-hiring`.
@@ -173,6 +173,8 @@ Then add each person to their channel by hand (channel name → **Add members**)
 ## Example run
 
 [`examples/brightbooks-full-run-grace.md`](examples/brightbooks-full-run-grace.md) is a complete run, from the job post to the Evaluator's report. The fictional candidate's answers were written by AI, and the Evaluator flagged exactly that: it rated integrity "Some concern" because the long, polished answers arrived far too fast, while keeping timing out of the skill scores.
+
+[`examples/aisha-bello-junior-accountant-report.md`](examples/aisha-bello-junior-accountant-report.md) is the Evaluator's report from the run in the [demo video](https://youtu.be/Nie_df-agGQ). Besides the timing pattern, it noticed that the candidate's test account had earlier been in the hiring room and flagged it for the manager. That is why both channels are now private.
 
 [`examples/brightbooks-run.md`](examples/brightbooks-run.md) is a real test run copied from Mattermost: the manager's setup, the Assessor's draft and scoring guide, APPROVE, three timed tasks with timestamps, and the start of the live interview. It also says honestly where that run stopped (the Evaluator's machine went offline) and what we changed because of it. The candidate is fictional; an AI wrote her answers to test the workflow.
 
