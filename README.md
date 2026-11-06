@@ -8,16 +8,14 @@ Built for the **Flip the Switch Hackathon** (WeMakeDevs × DevTools Academy), Tr
 
 ## See it
 
+[![Watch the SkillRoom demo video on YouTube](https://img.youtube.com/vi/Nie_df-agGQ/hqdefault.jpg)](https://youtu.be/Nie_df-agGQ)
+
+- **Demo video (3:34):** https://youtu.be/Nie_df-agGQ: one full session through Switch, from the job post to APPROVE, the graduate's timed answers, the six-question interview and the Evaluator's report. Narrated, with captions.
 - **Live site:** https://terhemba10.github.io/skillroom/ shows how it works, with a replay of an example session.
 - **Full run with the Evaluator's report:** [`examples/brightbooks-full-run-grace.md`](examples/brightbooks-full-run-grace.md): job post, draft, APPROVE, three timed tasks, the six-question interview and the scored report (5/5, with an integrity flag on the AI-written answers).
 - **Earlier partial run:** [`examples/brightbooks-run.md`](examples/brightbooks-run.md): setup, the Assessor's draft, APPROVE, three timed tasks and the start of the interview.
 
 ![The private SkillRoom channels in Mattermost, with the interview room open](examples/skillroom-rooms.png)
-<!--
-DEMO: before submitting, uncomment these lines and fill them in.
-
-- **Demo video (2-3 min):** <YouTube or Loom link>: one full session through Switch, from the job post to APPROVE, the graduate's answers, the interview and the Evaluator's report.
--->
 
 ### Judge quickstart (Mac / Linux)
 
