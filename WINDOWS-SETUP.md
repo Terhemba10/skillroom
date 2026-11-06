@@ -115,7 +115,15 @@ Open a room, click the **Configuration** tab, then **Open in Mattermost**. Matte
 
 **Make both channels private first (once).** Mattermost creates channels as public, and anyone with an account can join a public channel through **Browse channels**, so a graduate could join `skillroom-hiring` and read the scoring guide and answer keys. While signed in as a Mattermost admin, open each channel, click the **channel name** at the top and choose **Convert to Private Channel**:
 
-**Which account is an admin?** Click the grid icon at the top left of Mattermost. If you see **System Console**, that account is an admin. On the Mattermost that Switch Console sets up, Switch creates the first account (`admin`) itself, so accounts you create later are usually not admins. In our test, our own accounts couldn't convert the channels, so they stayed public.
+**Which account is an admin?** Click the grid icon at the top left of Mattermost. If you see **System Console**, that account is an admin. On the Mattermost that Switch Console sets up, Switch creates the first account (`admin`) itself, so accounts you create later are usually not admins. In our test our own accounts weren't admins, so we converted the channels from PowerShell with Mattermost's own tool inside its container (no password needed):
+
+```powershell
+docker ps --format "{{.Names}}"
+docker exec switchdash-local-mattermost-mattermost-1 mmctl --local channel modify switch:skillroom-hiring --private
+docker exec switchdash-local-mattermost-mattermost-1 mmctl --local channel modify switch:skillroom-interview --private
+```
+
+Use the container name the first command prints. Afterwards both channels show a lock icon, Browse channels no longer lists them, and the agents still reply in both.
 
 1. `skillroom-hiring`: **required**.
 2. `skillroom-interview`: recommended, so only the graduate you invite sees their tasks.
