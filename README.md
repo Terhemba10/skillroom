@@ -12,7 +12,7 @@ Built for the **Flip the Switch Hackathon** (WeMakeDevs × DevTools Academy), Tr
 - **Full run with the Evaluator's report:** [`examples/brightbooks-full-run-grace.md`](examples/brightbooks-full-run-grace.md): job post, draft, APPROVE, three timed tasks, the six-question interview and the scored report (5/5, with an integrity flag on the AI-written answers).
 - **Earlier partial run:** [`examples/brightbooks-run.md`](examples/brightbooks-run.md): setup, the Assessor's draft, APPROVE, three timed tasks and the start of the interview.
 
-![Both SkillRoom rooms in Mattermost during the Grace Danjuma run](examples/skillroom-rooms.png)
+![The private SkillRoom channels in Mattermost, with the interview room open](examples/skillroom-rooms.png)
 <!--
 DEMO: before submitting, uncomment these lines and fill them in.
 
