@@ -113,7 +113,9 @@ Open a room, click the **Configuration** tab, then **Open in Mattermost**. Matte
 
 ## 5b. Make the channels private, then give people access
 
-**Make both channels private first (once).** Mattermost creates channels as public, and anyone with an account can join a public channel through **Browse channels**, so a graduate could join `skillroom-hiring` and read the scoring guide and answer keys. While signed in as the hiring manager (the first Mattermost account is the system admin), open each channel, click the **channel name** at the top and choose **Convert to Private Channel**:
+**Make both channels private first (once).** Mattermost creates channels as public, and anyone with an account can join a public channel through **Browse channels**, so a graduate could join `skillroom-hiring` and read the scoring guide and answer keys. While signed in as a Mattermost admin, open each channel, click the **channel name** at the top and choose **Convert to Private Channel**:
+
+**Which account is an admin?** Click the grid icon at the top left of Mattermost. If you see **System Console**, that account is an admin. On the Mattermost that Switch Console sets up, Switch creates the first account (`admin`) itself, so accounts you create later are usually not admins. In our test, our own accounts couldn't convert the channels, so they stayed public.
 
 1. `skillroom-hiring`: **required**.
 2. `skillroom-interview`: recommended, so only the graduate you invite sees their tasks.

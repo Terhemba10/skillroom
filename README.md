@@ -65,7 +65,7 @@ Two linked rooms in team chat:
 
 Switch is the backbone of SkillRoom; the workflow cannot run without it.
 
-- **Rooms:** a Switch room group with two linked rooms keeps the scoring guide and Evaluator away from the graduate. The hiring channel is made private in Mattermost, so a graduate can't find it through Browse channels (see [Give someone access](#give-someone-access-to-the-channels)).
+- **Rooms:** a Switch room group with two linked rooms keeps the scoring guide and Evaluator away from the graduate. Before real use, the hiring channel should be made private in Mattermost, so a graduate can't find it through Browse channels (see [Give someone access](#give-someone-access-to-the-channels)). In our demo the channels are still public.
 - **Agents as teammates:** three Claude Code agents join the rooms with their own names, hand work to each other by @mention, and work alongside two people.
 - **Addressing rules:** the Assessor and Interviewer talk to anyone in their rooms; the Evaluator only listens to the hiring manager and the other agents, so a graduate cannot reach it.
 - **One template:** everything is created from [`skillroom.template.yaml`](skillroom.template.yaml) in one step in Switch Console.
@@ -152,7 +152,7 @@ If Switch Console won't create agents from the template (on Windows it currently
 1. `skillroom-hiring`: **required**. It holds the scoring guide, the answer keys and the Evaluator.
 2. `skillroom-interview`: recommended, so only the graduate you invite sees their tasks.
 
-Private channels don't appear in Browse channels. Converting needs channel or system admin rights; the first Mattermost account on a new server is the system admin. Afterwards, post a short message in each channel and check that the agents still reply.
+Private channels don't appear in Browse channels. Converting needs Mattermost admin rights. On the Mattermost that Switch Console sets up, Switch creates the first account (`admin`) itself, so accounts you create later are not admins and won't see **Convert to Private Channel**. You need that admin login, or another account a system admin has promoted. Afterwards, post a short message in each channel and check that the agents still reply.
 
 **Then add people by hand.** Only the hiring manager adds people, by role:
 
