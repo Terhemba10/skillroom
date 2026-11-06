@@ -111,20 +111,33 @@ Open a room, click the **Configuration** tab, then **Open in Mattermost**. Matte
 
 **First time:** on the first screen, create a Mattermost account (that's how we did it). Use the same account each time after that. To play the graduate separately, create a second account, then add it to **skillroom-interview** (room → **Configuration** → **Participants**).
 
-## 5b. Give someone access to the channels
+## 5b. Make the channels private, then give people access
 
-New Mattermost accounts only see **Town Square** and **Off-Topic**. Add each person to the SkillRoom channels for their role:
+**Make both channels private first (once).** Mattermost creates channels as public, and anyone with an account can join a public channel through **Browse channels**, so a graduate could join `skillroom-hiring` and read the scoring guide and answer keys. While signed in as the hiring manager (the first Mattermost account is the system admin), open each channel, click the **channel name** at the top and choose **Convert to Private Channel**:
+
+1. `skillroom-hiring`: **required**.
+2. `skillroom-interview`: recommended, so only the graduate you invite sees their tasks.
+
+Then post a short message in each channel and check that the agents still reply.
+
+**Add people by hand.** Only the hiring manager adds people:
 
 | Role | Channels | Why |
 |---|---|---|
 | Hiring manager | `skillroom-hiring` and `skillroom-interview` | Sets up the job, approves the test, reads the report, and can watch the interview |
 | Graduate | `skillroom-interview` **only** | Must never be in the hiring room, because it shows the scoring guide and the Evaluator |
 
+**How to add someone:** the person creates a Mattermost account on the first screen. The hiring manager opens the channel, clicks the **channel name → Add Members** and adds them. They refresh Mattermost (**F5**) to see it.
+
 `skillroom-assessor`, `skillroom-interviewer` and `skillroom-evaluator` are **agents, not channels**. They are already members of the rooms. Talk to them by typing `@skillroom-assessor` (and so on) inside a channel.
 
-**How to add someone:** they create an account on the first screen of Mattermost, then click **+ Add Channels → Browse channels** and join the channel for their role (above). They refresh Mattermost (**F5**) to see the channels.
-
 ## 6. Run a test
+
+**Before you start, keep every agent online for the whole run.** Our first full run stopped when the Evaluator's machine went offline before scoring. Run all three agents on **one machine that stays awake**:
+- Plug the PC in, and set **Settings → System → Power → Screen and sleep** to **Never** while plugged in, for the length of the run.
+- Close heavy apps you don't need. The server, Mattermost and three Claude Code sessions share one PC.
+- In Switch Console, check that all three agents show as online (not "Machine offline") before you post the job, and again before the interview ends.
+- If an agent goes offline mid-run, see the [troubleshooting table](#troubleshooting), then ask it to continue in its room.
 
 1. In Mattermost, go to **skillroom-hiring**.
 2. Paste [`demo-companies/brightbooks-accounting.md`](demo-companies/brightbooks-accounting.md) and start the message with `@skillroom-assessor`.

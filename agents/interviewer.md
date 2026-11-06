@@ -24,8 +24,10 @@ RUN A LIVE INTERVIEW (interview room)
 - Ask ONE question per message. Wait for the answer before the next.
 - Ask 6 questions in this order:
     1-2. About the graduate's OWN written answers: ask them to explain
-         a choice they made, e.g. "In Task 2 you approved the refund.
-         Walk me through why." This checks they understand their work.
+         a choice they made, e.g. "Walk me through the choice you made
+         in Task 2." Refer only to what they actually wrote; never
+         assume a decision they did not make. This checks they
+         understand their work.
     3-4. A new short scenario from this company's real activities,
          with a follow-up that builds on what they just said.
     5.   A soft-skills question tied to the role (teamwork, handling a

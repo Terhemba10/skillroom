@@ -5,6 +5,7 @@ This was a real test run of SkillRoom on the Windows setup described in [WINDOWS
 **Please note:**
 - **Amina Yusuf is a fictional demo candidate.** Her answers were written by the builder's AI assistant playing the graduate, to test the workflow. They are not a real person's work.
 - **This run did not reach the final report.** The interview stopped after question 2, and the Evaluator's machine went offline before scoring. What happened, and what we changed because of it, is at the end.
+- **The agents' wording has changed since this run.** For example, the honesty statement below is an earlier version; the current one in [`skillroom.template.yaml`](../skillroom.template.yaml) also mentions the time limits. The Interviewer's example question has also been made neutral. The flow is the same.
 
 ---
 

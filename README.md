@@ -6,15 +6,28 @@ SkillRoom is a hiring workflow built on [Switch](https://github.com/sandbox-quan
 
 Built for the **Flip the Switch Hackathon** (WeMakeDevs × DevTools Academy), Track 1: Best Business Workflow.
 
+## See it
+
+- **Live site:** https://terhemba10.github.io/skillroom/ shows how it works, with a replay of an example session.
+- **Real run in Mattermost:** [`examples/brightbooks-run.md`](examples/brightbooks-run.md): setup, the Assessor's draft, APPROVE, three timed tasks and the start of the interview.
 <!--
-DEMO: before submitting, uncomment this block and fill in the links.
+DEMO: before submitting, uncomment these lines and fill them in.
 
-## Demo
+- **Demo video (2-3 min):** <YouTube or Loom link>: one full session through Switch, from the job post to APPROVE, the graduate's answers, the interview and the Evaluator's report.
+- **Scored report:** [`examples/<graduate-name>-<role>.md`](examples), copied from the Evaluator's `reports/` folder.
 
-- **Video (2-3 min):** <YouTube or Loom link>: a full session through Switch, from job post to APPROVE to the graduate's answers, the interview and the report.
-- **Screenshots:** see [`examples/`](examples)
-- **Sample report:** [`examples/<graduate-name>-<role>.md`](examples), copied from the Evaluator's `reports/` folder after a real run.
+![Both SkillRoom rooms in Mattermost](examples/<screenshot-or-gif>.png)
 -->
+
+### Judge quickstart (Mac / Linux)
+
+With [Switch Console](https://github.com/sandbox-quantum/switch#getting-started) running a local server, Docker, and Claude Code signed in:
+
+1. **Templates → Import** [`skillroom.template.yaml`](skillroom.template.yaml), keep the defaults, then **Create**.
+2. In Mattermost, open **skillroom-hiring** and paste [`demo-companies/brightbooks-accounting.md`](demo-companies/brightbooks-accounting.md), starting with `@skillroom-assessor`.
+3. Read the draft tasks and reply `APPROVE`.
+
+The Assessor then starts the assessment in **skillroom-interview**. Answer there as the graduate. On Windows, see [Windows setup](#windows-setup). Before using it with real candidates, make the hiring channel private ([Give someone access](#give-someone-access-to-the-channels)).
 
 ---
 
@@ -41,7 +54,7 @@ Two linked rooms in team chat:
 
 1. **Set up.** The hiring manager posts the job, a company description, the policies that matter for the role, and the graduate's name in the hiring room.
 2. **Assessor drafts the test.** It writes 3 tasks set inside that company (a day-one task, a policy scenario, a reasoning problem) plus a scoring guide.
-3. **Human approves.** Nothing reaches the graduate until the manager replies `APPROVE`.
+3. **Human approves.** Nothing reaches the graduate until the manager replies `APPROVE`. The draft is open to review: in our [BrightBooks run](examples/brightbooks-run.md), the Assessor pointed out that Policy 3 (no receipt, no payment) wasn't tested and offered to add it before approval. The manager sees what is and isn't covered, and can change it.
 4. **Written assessment.** The Assessor gives the graduate the tasks one at a time in the interview room, each with the company guidelines they need.
 5. **Live interview.** The Interviewer asks about the graduate's *own* written answers, then new scenarios, with adaptive follow-ups.
 6. **Scored report.** The Evaluator scores Job knowledge, Problem-solving, Communication and Policy compliance, checks each policy, adds timing and integrity notes, suggests a next step, and saves a copy under `reports/`.
@@ -51,7 +64,7 @@ Two linked rooms in team chat:
 
 Switch is the backbone of SkillRoom; the workflow cannot run without it.
 
-- **Rooms:** a Switch room group with two linked rooms keeps the scoring guide and Evaluator away from the graduate.
+- **Rooms:** a Switch room group with two linked rooms keeps the scoring guide and Evaluator away from the graduate. The hiring channel is made private in Mattermost, so a graduate can't find it through Browse channels (see [Give someone access](#give-someone-access-to-the-channels)).
 - **Agents as teammates:** three Claude Code agents join the rooms with their own names, hand work to each other by @mention, and work alongside two people.
 - **Addressing rules:** the Assessor and Interviewer talk to anyone in their rooms; the Evaluator only listens to the hiring manager and the other agents, so a graduate cannot reach it.
 - **One template:** everything is created from [`skillroom.template.yaml`](skillroom.template.yaml) in one step in Switch Console.
@@ -92,6 +105,8 @@ net start winnat
 
 On Windows the template form marks every provider "Not supported here", so you create the three agents by hand (**Your Agents → New agent**) and the two rooms in **Your Rooms**. The ready-to-paste settings and instructions are in [`agents/`](agents).
 
+**Keep all three agents on one machine that stays awake.** Our first full run stopped because the Evaluator's machine went offline before scoring. For a run or a demo, plug the PC in, turn off sleep, and check that all three agents show as online in Switch Console before you start. Details: [WINDOWS-SETUP.md, step 6](WINDOWS-SETUP.md#6-run-a-test).
+
 Where things live in Switch Console:
 - **Who can talk to an agent:** agent → gear icon → **Agent settings → General → Who can talk to your agent**. Assessor and Interviewer: **Anyone**. Evaluator: **Me and my agents (default)**.
 - **Agents in a room:** room → **Configuration** tab → **Participants → + Add agent**.
@@ -131,16 +146,23 @@ If Switch Console won't create agents from the template (on Windows it currently
 
 ## Give someone access to the channels
 
-New Mattermost accounts only see **Town Square** and **Off-Topic**. Add each person to the SkillRoom channels for their role:
+**First, make both SkillRoom channels private (once, before the first graduate).** Mattermost creates channels as public, and anyone with an account can find and join a public channel through **Browse channels**. A graduate could then join `skillroom-hiring` and read the scoring guide and answer keys. To stop that, the hiring manager opens each channel in Mattermost, clicks the **channel name** at the top, and chooses **Convert to Private Channel**:
+
+1. `skillroom-hiring`: **required**. It holds the scoring guide, the answer keys and the Evaluator.
+2. `skillroom-interview`: recommended, so only the graduate you invite sees their tasks.
+
+Private channels don't appear in Browse channels. Converting needs channel or system admin rights; the first Mattermost account on a new server is the system admin. Afterwards, post a short message in each channel and check that the agents still reply.
+
+**Then add people by hand.** Only the hiring manager adds people, by role:
 
 | Role | Channels | Why |
 |---|---|---|
 | Hiring manager | `skillroom-hiring` and `skillroom-interview` | Sets up the job, approves the test, reads the report, and can watch the interview |
 | Graduate | `skillroom-interview` **only** | Must never be in the hiring room, because it shows the scoring guide and the Evaluator |
 
-`skillroom-assessor`, `skillroom-interviewer` and `skillroom-evaluator` are **agents, not channels**. They are already members of the rooms. Talk to them by typing `@skillroom-assessor` (and so on) inside a channel.
+**How to add someone:** the person creates a Mattermost account on the first screen. The hiring manager then opens the channel, clicks the **channel name → Add Members**, and adds them. They refresh Mattermost (**F5**) to see it. Graduates are never added to `skillroom-hiring`.
 
-**How to add someone:** they create an account on the first screen of Mattermost, then click **+ Add Channels → Browse channels** and join the channel for their role (above). They refresh Mattermost (**F5**) to see the channels.
+`skillroom-assessor`, `skillroom-interviewer` and `skillroom-evaluator` are **agents, not channels**. They are already members of the rooms. Talk to them by typing `@skillroom-assessor` (and so on) inside a channel.
 
 ## Example run
 
@@ -162,7 +184,7 @@ Same workflow, completely different tests: SkillRoom adapts to any job.
 - More job families, with expert-reviewed tasks for regulated roles (health, legal, finance)
 - Comparing several candidates for one role
 - Connecting to Slack or Microsoft Teams for companies that already use them
-- Automatic channel access: new graduate accounts join the interview room by themselves (today you add them once, see [Give someone access](#give-someone-access-to-the-channels))
+- Private channels from the start: create both rooms as private and invite the graduate in one step (today the manager converts the channels once and adds people by hand, see [Give someone access](#give-someone-access-to-the-channels))
 
 ## Built with
 
@@ -171,10 +193,6 @@ Switch · Switch Console · Claude Code · Mattermost · Docker
 ## License
 
 MIT, see [LICENSE](LICENSE).
-
-## Live site
-
-https://terhemba10.github.io/skillroom/ shows how SkillRoom works, with a replay of an example session.
 
 ## Author
 

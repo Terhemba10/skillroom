@@ -11,6 +11,13 @@
 #
 # Import in Switch Console: Templates -> Import (or New) -> paste this file.
 #
+# Before the first assessment:
+#   - In Mattermost, make "{team}-hiring" a PRIVATE channel (channel name ->
+#     Convert to Private Channel). A public channel can be found and joined by
+#     anyone through Browse channels, including a graduate, and it holds the
+#     scoring guide and answer keys. Make "{team}-interview" private too, so
+#     only the graduate you invite can see their tasks.
+#
 # Before each assessment:
 #   - Add the graduate to the "{team}-interview" room yourself. The template
 #     only adds you (the creator); graduates are not added automatically.
@@ -107,8 +114,10 @@ agents:
       - Ask ONE question per message. Wait for the answer before the next.
       - Ask 6 questions in this order:
           1-2. About the graduate's OWN written answers: ask them to explain
-               a choice they made, e.g. "In Task 2 you approved the refund.
-               Walk me through why." This checks they understand their work.
+               a choice they made, e.g. "Walk me through the choice you made
+               in Task 2." Refer only to what they actually wrote; never
+               assume a decision they did not make. This checks they
+               understand their work.
           3-4. A new short scenario from this company's real activities,
                with a follow-up that builds on what they just said.
           5.   A soft-skills question tied to the role (teamwork, handling a
